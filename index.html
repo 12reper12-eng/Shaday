@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shaday | Relojes, Alhajas & Accesorios</title>
   <style>
-    /* Estilos Generales */
+    /* Reset y Estilos Generales */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,69 +18,124 @@
       line-height: 1.6;
     }
 
-    /* Encabezado y Navegación */
+    /* Encabezado Responsivo */
     header {
       background-color: #111111;
       color: #ffffff;
-      padding: 15px 40px;
+      padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
       box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
-    /* Espacio reservado para el logo */
     .brand-logo img {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       object-fit: cover;
       background-color: #d4af37;
     }
     .brand-logo h1 {
-      font-size: 26px;
-      color: #d4af37; /* Dorado Shaday */
+      font-size: 24px;
+      color: #d4af37;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
-    nav a {
+
+    /* Menú de Navegación */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    nav a, .dropdown-btn {
       color: #ffffff;
       text-decoration: none;
-      margin-left: 20px;
       font-weight: 600;
       font-size: 14px;
       letter-spacing: 1px;
       text-transform: uppercase;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px 0;
       transition: color 0.2s;
     }
-    nav a:hover {
+    nav a:hover, .dropdown-btn:hover {
+      color: #d4af37;
+    }
+
+    /* Menú Desplegable (Dropdown para Catálogo) */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #1a1a1a;
+      min-width: 240px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.4);
+      border-radius: 6px;
+      overflow: hidden;
+      top: 100%;
+      left: 0;
+      z-index: 1001;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown-section {
+      border-bottom: 1px solid #2a2a2a;
+      padding: 8px 0;
+    }
+    .dropdown-section-title {
+      color: #d4af37;
+      font-size: 12px;
+      padding: 6px 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .dropdown-content a {
+      color: #dddddd;
+      padding: 8px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 13px;
+      text-transform: none;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .dropdown-content a:hover {
+      background-color: #2a2a2a;
       color: #d4af37;
     }
 
     /* Banner Principal (Hero) */
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80');
+      background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80');
       background-size: cover;
       background-position: center;
       color: #ffffff;
       text-align: center;
-      padding: 90px 20px;
+      padding: 80px 20px;
     }
     .hero h2 {
-      font-size: 42px;
-      margin-bottom: 15px;
+      font-size: 38px;
+      margin-bottom: 12px;
       letter-spacing: 1px;
     }
     .hero p {
-      font-size: 18px;
-      margin-bottom: 25px;
+      font-size: 17px;
+      margin-bottom: 22px;
       color: #dddddd;
       max-width: 600px;
       margin-left: auto;
@@ -89,8 +144,7 @@
     .btn-main {
       background-color: #d4af37;
       color: #111111;
-      padding: 14px 32px;
-      border: none;
+      padding: 12px 30px;
       border-radius: 30px;
       font-weight: bold;
       cursor: pointer;
@@ -106,102 +160,73 @@
       transform: scale(1.03);
     }
 
-    /* Contenedor de Contenido */
+    /* Contenedor del Catálogo */
     .container {
       max-width: 1100px;
-      margin: 50px auto;
+      margin: 40px auto;
       padding: 0 20px;
     }
     .section-title {
       text-align: center;
       margin-bottom: 30px;
-      font-size: 30px;
+      font-size: 28px;
       color: #111111;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    /* Filtros de Categoría */
-    .filters {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-    .filter-btn {
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
-      padding: 10px 22px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.2s;
-    }
-    .filter-btn.active, .filter-btn:hover {
-      background-color: #111111;
-      color: #ffffff;
-      border-color: #111111;
-    }
-
-    /* Rejilla de Productos */
+    /* Rejilla de Productos Adaptable (PC y Móvil) */
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
     }
     .product-card {
       background-color: #ffffff;
       border: 1px solid #eeeeee;
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       text-align: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.03);
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .product-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.08);
     }
     .product-img {
       width: 100%;
-      height: 200px;
+      height: 190px;
       background-color: #f5f5f5;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #999999;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       font-weight: bold;
-      object-fit: cover;
     }
     .product-card h3 {
-      font-size: 18px;
+      font-size: 17px;
       margin-bottom: 6px;
       color: #222;
     }
     .product-card .price {
       color: #d4af37;
       font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 15px;
+      font-size: 19px;
+      margin-bottom: 12px;
     }
     .btn-buy {
       background-color: #25d366; /* Verde WhatsApp */
       color: #ffffff;
       border: none;
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
       width: 100%;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      font-size: 13px;
       transition: background-color 0.2s;
     }
     .btn-buy:hover {
@@ -214,20 +239,52 @@
       color: #888888;
       text-align: center;
       padding: 30px 20px;
-      margin-top: 80px;
+      margin-top: 60px;
       font-size: 14px;
     }
     footer p {
       margin-bottom: 8px;
     }
-    .social-links {
-      margin-top: 15px;
-    }
-    .social-links a {
-      color: #d4af37;
-      text-decoration: none;
-      margin: 0 10px;
+    .footer-whatsapp {
+      color: #25d366;
       font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* Adaptabilidad para Dispositivos Móviles (Teléfono) */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+      }
+      .hero h2 {
+        font-size: 28px;
+      }
+      .hero p {
+        font-size: 15px;
+      }
+      .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+      }
+      .product-card {
+        padding: 12px;
+      }
+      .product-img {
+        height: 140px;
+      }
+      .product-card h3 {
+        font-size: 15px;
+      }
+      .dropdown-content {
+        position: fixed;
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        max-height: 350px;
+        overflow-y: auto;
+      }
     }
   </style>
 </head>
@@ -236,89 +293,139 @@
   <!-- Encabezado -->
   <header>
     <div class="brand-logo">
-      <!-- Reemplaza "logo.png" por la ruta de la imagen de tu logo cuando lo tengas -->
       <img src="https://via.placeholder.com/40/d4af37/ffffff?text=S" alt="Logo Shaday">
       <h1>Shaday</h1>
     </div>
+
+    <!-- Navegación con Menú Desplegable -->
     <nav>
       <a href="#inicio">Inicio</a>
-      <a href="#productos">Catálogo</a>
-      <a href="#contacto">Contacto</a>
+
+      <!-- Desplegable Catálogo -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Catálogo &#9662;</button>
+        <div class="dropdown-content">
+          
+          <!-- Relojes por Tipo -->
+          <div class="dropdown-section">
+            <div class="dropdown-section-title">Relojes</div>
+            <a href="#grid" onclick="filtrar('reloj-cuero')">Relojes de Cuero</a>
+            <a href="#grid" onclick="filtrar('reloj-deportivo')">Relojes Deportivos</a>
+            <a href="#grid" onclick="filtrar('reloj-hierro')">Relojes de Correa de Hierro</a>
+          </div>
+
+          <!-- Correas por Tipo -->
+          <div class="dropdown-section">
+            <div class="dropdown-section-title">Correas</div>
+            <a href="#grid" onclick="filtrar('correa-cuero')">Correas de Cuero</a>
+            <a href="#grid" onclick="filtrar('correa-metal')">Correas Metalizadas</a>
+          </div>
+
+          <!-- Cadenas / Joyería -->
+          <div class="dropdown-section">
+            <div class="dropdown-section-title">Joyería</div>
+            <a href="#grid" onclick="filtrar('cadena')">Cadenas</a>
+            <a href="#grid" onclick="filtrar('pulsera')">Pulseras</a>
+            <a href="#grid" onclick="filtrar('tobillera')">Tobilleras</a>
+          </div>
+
+          <!-- Bolsos y Bandoleros -->
+          <div class="dropdown-section">
+            <div class="dropdown-section-title">Bolsos & Bandoleros</div>
+            <a href="#grid" onclick="filtrar('bolso')">Bolsos de Mano</a>
+            <a href="#grid" onclick="filtrar('bandolero')">Bandoleros</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Link Directo a WhatsApp para Contacto -->
+      <a href="#" onclick="abrirContactoWhatsApp(); return false;">Contacto</a>
     </nav>
   </header>
 
   <!-- Banner Hero -->
   <section class="hero" id="inicio">
-    <h2>Estilo & Elegancia Shaday</h2>
-    <p>Descubre nuestra exclusiva línea de relojes, alhajas, cadenas, pulseras, tobilleras, bandoleros y bolsos.</p>
-    <a href="#productos" class="btn-main">Ver Colección</a>
+    <h2>Estilo y Elegancia</h2>
+    <p>Complementa tu presencia con nuestra colección exclusiva de relojes, joyería, bolsos y bandoleros Shaday.</p>
+    <a href="#grid" class="btn-main">Ver Colección</a>
   </section>
 
-  <!-- Catálogo de Productos -->
-  <main class="container" id="productos">
-    <h2 class="section-title">Colección Shaday</h2>
-    
-    <!-- Filtros de Categorías -->
-    <div class="filters">
-      <button class="filter-btn active" onclick="filterProducts('todos')">Todos</button>
-      <button class="filter-btn" onclick="filterProducts('relojes')">Relojes & Correas</button>
-      <button class="filter-btn" onclick="filterProducts('joyeria')">Joyería & Alhajas</button>
-      <button class="filter-btn" onclick="filterProducts('bolsos')">Bolsos & Bandoleros</button>
-    </div>
+  <!-- Sección Catálogo -->
+  <main class="container">
+    <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
-    <!-- Catálogo de Productos -->
+    <!-- Productos -->
     <div class="products-grid" id="grid">
 
-      <!-- Reloj -->
-      <div class="product-card" data-category="relojes">
+      <!-- Relojes -->
+      <div class="product-card" data-tipo="reloj-cuero">
         <div class="product-img">[ Foto Reloj ]</div>
-        <h3>Reloj Elegante de Cuero</h3>
+        <h3>Reloj Ejecutivo de Cuero</h3>
         <div class="price">$25.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Elegante de Cuero')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Ejecutivo de Cuero')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Correa -->
-      <div class="product-card" data-category="relojes">
+      <div class="product-card" data-tipo="reloj-deportivo">
+        <div class="product-img">[ Foto Reloj ]</div>
+        <h3>Reloj Deportivo Resistente</h3>
+        <div class="price">$30.00</div>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Deportivo Resistente')">Pedir por WhatsApp</button>
+      </div>
+
+      <div class="product-card" data-tipo="reloj-hierro">
+        <div class="product-img">[ Foto Reloj ]</div>
+        <h3>Reloj Elegante Correa de Hierro</h3>
+        <div class="price">$35.00</div>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Elegante Correa de Hierro')">Pedir por WhatsApp</button>
+      </div>
+
+      <!-- Correas -->
+      <div class="product-card" data-tipo="correa-cuero">
         <div class="product-img">[ Foto Correa ]</div>
-        <h3>Correa de Repuesto</h3>
+        <h3>Correa de Repuesto en Cuero</h3>
         <div class="price">$10.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Correa de Repuesto')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Correa de Repuesto en Cuero')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Pulsera -->
-      <div class="product-card" data-category="joyeria">
-        <div class="product-img">[ Foto Pulsera ]</div>
-        <h3>Pulsera de Acero Inoxidable</h3>
+      <div class="product-card" data-tipo="correa-metal">
+        <div class="product-img">[ Foto Correa ]</div>
+        <h3>Correa Metálica Ajustable</h3>
         <div class="price">$12.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Pulsera de Acero Inoxidable')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Correa Metálica Ajustable')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Cadena -->
-      <div class="product-card" data-category="joyeria">
+      <!-- Joyería -->
+      <div class="product-card" data-tipo="cadena">
         <div class="product-img">[ Foto Cadena ]</div>
         <h3>Cadena Fina Bañada en Oro</h3>
         <div class="price">$18.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp('Cadena Fina Bañada en Oro')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Tobillera -->
-      <div class="product-card" data-category="joyeria">
+      <div class="product-card" data-tipo="pulsera">
+        <div class="product-img">[ Foto Pulsera ]</div>
+        <h3>Pulsera de Acero Inoxidable</h3>
+        <div class="price">$12.00</div>
+        <button class="btn-buy" onclick="pedirPorWhatsApp('Pulsera de Acero Inoxidable')">Pedir por WhatsApp</button>
+      </div>
+
+      <div class="product-card" data-tipo="tobillera">
         <div class="product-img">[ Foto Tobillera ]</div>
         <h3>Tobillera Playera Ajustable</h3>
         <div class="price">$8.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp('Tobillera Playera Ajustable')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Bandolero -->
-      <div class="product-card" data-category="bolsos">
+      <!-- Bolsos y Bandoleros -->
+      <div class="product-card" data-tipo="bandolero">
         <div class="product-img">[ Foto Bandolero ]</div>
         <h3>Bandolero Urbano Unisex</h3>
         <div class="price">$22.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp('Bandolero Urbano Unisex')">Pedir por WhatsApp</button>
       </div>
 
-      <!-- Bolso -->
-      <div class="product-card" data-category="bolsos">
+      <div class="product-card" data-tipo="bolso">
         <div class="product-img">[ Foto Bolso ]</div>
         <h3>Bolso de Mano Casual</h3>
         <div class="price">$30.00</div>
@@ -329,39 +436,37 @@
   </main>
 
   <!-- Pie de Página -->
-  <footer id="contacto">
+  <footer>
     <p>&copy; 2026 <strong>Shaday</strong> - Todos los derechos reservados.</p>
-    <p>Calidad y estilo garantizado. Envíos a todo el país.</p>
-    <div class="social-links">
-      <a href="#">Instagram</a> | <a href="#">Facebook</a> | <a href="#">TikTok</a>
-    </div>
+    <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
   </footer>
 
-  <!-- Lógica en JavaScript -->
+  <!-- Script de Control -->
   <script>
-    // Coloca tu número de WhatsApp aquí (código de país sin el signo +)
+    // Tu número de WhatsApp (código de país sin signo +)
     const NUMERO_WHATSAPP = "584120000000";
 
-    // Función para filtrar categorías
-    function filterProducts(category) {
-      const cards = document.querySelectorAll('.product-card');
-      const buttons = document.querySelectorAll('.filter-btn');
-
-      buttons.forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-
-      cards.forEach(card => {
-        if (category === 'todos' || card.dataset.category === category) {
-          card.style.display = 'block';
+    // Filtrar productos al hacer clic en el menú desplegable
+    function filtrar(tipo) {
+      const productos = document.querySelectorAll('.product-card');
+      productos.forEach(prod => {
+        if (tipo === 'todos' || prod.dataset.tipo === tipo) {
+          prod.style.display = 'block';
         } else {
-          card.style.display = 'none';
+          prod.style.display = 'none';
         }
       });
     }
 
-    // Redirección directa a WhatsApp
+    // Comprar un producto específico vía WhatsApp
     function pedirPorWhatsApp(producto) {
-      const mensaje = encodeURIComponent(`¡Hola Shaday! Quisiera consultar la disponibilidad de: ${producto}.`);
+      const mensaje = encodeURIComponent(`¡Hola Shaday! Me interesa consultar la disponibilidad del producto: ${producto}.`);
+      window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
+    }
+
+    // Contacto directo general por WhatsApp
+    function abrirContactoWhatsApp() {
+      const mensaje = encodeURIComponent("¡Hola Shaday! Quisiera recibir información sobre sus productos y envíos.");
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
   </script>
