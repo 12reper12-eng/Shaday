@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shaday | Relojes, Alhajas & Accesorios</title>
   
-  <!-- Carga de SDKs de Firebase (v9 Compat para HTML sencillo) -->
+  <!-- Carga de SDKs de Firebase (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
@@ -602,7 +602,7 @@
     </div>
   </main>
 
-  <!-- Modal de Login Administrador Firebase -->
+  <!-- Modal de Login Administrador -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <button class="btn-close-modal" onclick="ocultarModalLogin()">✕</button>
@@ -617,37 +617,32 @@
   <footer>
     <p>&copy; 2026 <strong>Shaday</strong> - Todos los derechos reservados.</p>
     <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
+    <!-- Botón discreto para abrir la administración -->
     <span class="admin-link" onclick="mostrarModalLogin()">Acceso Admin</span>
   </footer>
 
-  <!-- Script Firebase y Funcionalidad -->
+  <!-- Script Firebase y Funcionalidad del Sitio -->
   <script>
     const NUMERO_WHATSAPP = "584120000000";
 
-    // 1. CONFIGURACIÓN DE TU PROYECTO FIREBASE
-    // Reemplaza los siguientes valores con los datos de tu consola de Firebase
+    // CLAVES EXACTAS DE TU PROYECTO FIREBASE
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "tu-proyecto.firebaseapp.com",
-      projectId: "tu-proyecto",
-      storageBucket: "tu-proyecto.appspot.com",
-      messagingSenderId: "000000000000",
-      appId: "1:000000000000:web:000000000000"
+      apiKey: "AIzaSyAWLwP7pAi0-DhrueFLa8fn8Vs_3e8YYJA",
+      authDomain: "shaday-5cbaf.firebaseapp.com",
+      projectId: "shaday-5cbaf",
+      storageBucket: "shaday-5cbaf.firebasestorage.app",
+      messagingSenderId: "48875691883",
+      appId: "1:48875691883:web:f0fe2403cbfce1c7bab62e",
+      measurementId: "G-PG168MKW26"
     };
 
     // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Escuchar el estado de la autenticación
+    // Escuchar cambios de sesión
     auth.onAuthStateChanged((user) => {
       if (user) {
-        // Si el correo requiere verificación previa, podemos comprobarlo:
-        if (!user.emailVerified) {
-          alert("Te hemos enviado un correo de verificación. Por favor revisa tu bandeja de entrada.");
-          // Opcional: enviar enlace de verificación si no lo ha recibido
-          user.sendEmailVerification();
-        }
         activarModoAdmin();
       } else {
         desactivarModoAdmin();
@@ -663,18 +658,18 @@
       document.getElementById("loginModal").style.display = "none";
     }
 
-    // Iniciar Sesión con Firebase
+    // Iniciar Sesión
     function loginConFirebase() {
       const email = document.getElementById("emailAdmin").value;
       const pass = document.getElementById("passwordAdmin").value;
 
       auth.signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
+        .then(() => {
           ocultarModalLogin();
-          alert("¡Acceso correcto!");
+          alert("¡Acceso correcto como Administrador!");
         })
         .catch((error) => {
-          alert("Error de autenticación: " + error.message);
+          alert("Error: " + error.message);
         });
     }
 
@@ -685,21 +680,20 @@
       });
     }
 
-    // Activar Herramientas Admin
+    // Activar / Desactivar Controles de Administrador
     function activarModoAdmin() {
       document.getElementById("adminPanel").style.display = "block";
       const controles = document.querySelectorAll(".admin-controls-card");
       controles.forEach(c => c.style.display = "flex");
     }
 
-    // Desactivar Herramientas Admin
     function desactivarModoAdmin() {
       document.getElementById("adminPanel").style.display = "none";
       const controles = document.querySelectorAll(".admin-controls-card");
       controles.forEach(c => c.style.display = "none");
     }
 
-    // Funcionalidades del Catálogo
+    // Lógica del Catálogo
     function agregarProducto() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
