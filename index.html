@@ -73,7 +73,7 @@
       color: #d4af37;
     }
 
-    /* Menú Desplegable (Dropdown para Catálogo) */
+    /* Menú Desplegable */
     .dropdown {
       position: relative;
       display: inline-block;
@@ -175,7 +175,70 @@
       letter-spacing: 1px;
     }
 
-    /* Rejilla de Productos Adaptable (PC y Móvil) */
+    /* Panel de Administración */
+    .admin-panel {
+      display: none;
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .admin-panel h3 {
+      color: #d4af37;
+      margin-bottom: 15px;
+    }
+    .admin-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .admin-form input, .admin-form select {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      color: #fff;
+      flex: 1;
+      min-width: 150px;
+    }
+    .btn-admin-add {
+      background-color: #d4af37;
+      color: #111;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .admin-controls-card {
+      display: none;
+      margin-top: 10px;
+      gap: 5px;
+    }
+    .btn-edit {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      flex: 1;
+    }
+    .btn-delete {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      flex: 1;
+    }
+
+    /* Rejilla de Productos */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -218,7 +281,7 @@
       margin-bottom: 12px;
     }
     .btn-buy {
-      background-color: #25d366; /* Verde WhatsApp */
+      background-color: #25d366;
       color: #ffffff;
       border: none;
       padding: 10px 16px;
@@ -250,8 +313,15 @@
       font-weight: bold;
       text-decoration: none;
     }
+    .admin-link {
+      color: #444;
+      font-size: 11px;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 15px;
+    }
 
-    /* Adaptabilidad para Dispositivos Móviles (Teléfono) */
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -277,14 +347,6 @@
       .product-card h3 {
         font-size: 15px;
       }
-      .dropdown-content {
-        position: fixed;
-        left: 5%;
-        right: 5%;
-        width: 90%;
-        max-height: 350px;
-        overflow-y: auto;
-      }
     }
   </style>
 </head>
@@ -297,49 +359,36 @@
       <h1>Shaday</h1>
     </div>
 
-    <!-- Navegación con Menú Desplegable -->
+    <!-- Navegación -->
     <nav>
       <a href="#inicio">Inicio</a>
-
-      <!-- Desplegable Catálogo -->
       <div class="dropdown">
         <button class="dropdown-btn">Catálogo &#9662;</button>
         <div class="dropdown-content">
-          
-          <!-- Relojes por Tipo -->
           <div class="dropdown-section">
             <div class="dropdown-section-title">Relojes</div>
             <a href="#grid" onclick="filtrar('reloj-cuero')">Relojes de Cuero</a>
             <a href="#grid" onclick="filtrar('reloj-deportivo')">Relojes Deportivos</a>
             <a href="#grid" onclick="filtrar('reloj-hierro')">Relojes de Correa de Hierro</a>
           </div>
-
-          <!-- Correas por Tipo -->
           <div class="dropdown-section">
             <div class="dropdown-section-title">Correas</div>
             <a href="#grid" onclick="filtrar('correa-cuero')">Correas de Cuero</a>
             <a href="#grid" onclick="filtrar('correa-metal')">Correas Metalizadas</a>
           </div>
-
-          <!-- Cadenas / Joyería -->
           <div class="dropdown-section">
             <div class="dropdown-section-title">Joyería</div>
             <a href="#grid" onclick="filtrar('cadena')">Cadenas</a>
             <a href="#grid" onclick="filtrar('pulsera')">Pulseras</a>
             <a href="#grid" onclick="filtrar('tobillera')">Tobilleras</a>
           </div>
-
-          <!-- Bolsos y Bandoleros -->
           <div class="dropdown-section">
             <div class="dropdown-section-title">Bolsos & Bandoleros</div>
             <a href="#grid" onclick="filtrar('bolso')">Bolsos de Mano</a>
             <a href="#grid" onclick="filtrar('bandolero')">Bandoleros</a>
           </div>
-
         </div>
       </div>
-
-      <!-- Link Directo a WhatsApp para Contacto -->
       <a href="#" onclick="abrirContactoWhatsApp(); return false;">Contacto</a>
     </nav>
   </header>
@@ -355,81 +404,139 @@
   <main class="container">
     <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
-    <!-- Productos -->
+    <!-- Panel para Agregar Producto (Solo Administrador) -->
+    <div class="admin-panel" id="adminPanel">
+      <h3>Panel Administrador - Agregar Producto</h3>
+      <div class="admin-form">
+        <input type="text" id="nuevoNombre" placeholder="Nombre del Producto">
+        <input type="text" id="nuevoPrecio" placeholder="Precio (ej: $25.00)">
+        <select id="nuevoTipo">
+          <option value="reloj-cuero">Reloj de Cuero</option>
+          <option value="reloj-deportivo">Reloj Deportivo</option>
+          <option value="reloj-hierro">Reloj Correa Hierro</option>
+          <option value="correa-cuero">Correa Cuero</option>
+          <option value="correa-metal">Correa Metal</option>
+          <option value="cadena">Cadena</option>
+          <option value="pulsera">Pulsera</option>
+          <option value="tobillera">Tobillera</option>
+          <option value="bandolero">Bandolero</option>
+          <option value="bolso">Bolso</option>
+        </select>
+        <button class="btn-admin-add" onclick="agregarProducto()">Agregar Al Catálogo</button>
+      </div>
+    </div>
+
+    <!-- Rejilla de Productos -->
     <div class="products-grid" id="grid">
 
-      <!-- Relojes -->
       <div class="product-card" data-tipo="reloj-cuero">
         <div class="product-img">[ Foto Reloj ]</div>
         <h3>Reloj Ejecutivo de Cuero</h3>
         <div class="price">$25.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Ejecutivo de Cuero')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="reloj-deportivo">
         <div class="product-img">[ Foto Reloj ]</div>
         <h3>Reloj Deportivo Resistente</h3>
         <div class="price">$30.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Deportivo Resistente')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="reloj-hierro">
         <div class="product-img">[ Foto Reloj ]</div>
         <h3>Reloj Elegante Correa de Hierro</h3>
         <div class="price">$35.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Reloj Elegante Correa de Hierro')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
-      <!-- Correas -->
       <div class="product-card" data-tipo="correa-cuero">
         <div class="product-img">[ Foto Correa ]</div>
         <h3>Correa de Repuesto en Cuero</h3>
         <div class="price">$10.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Correa de Repuesto en Cuero')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="correa-metal">
         <div class="product-img">[ Foto Correa ]</div>
         <h3>Correa Metálica Ajustable</h3>
         <div class="price">$12.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Correa Metálica Ajustable')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
-      <!-- Joyería -->
       <div class="product-card" data-tipo="cadena">
         <div class="product-img">[ Foto Cadena ]</div>
         <h3>Cadena Fina Bañada en Oro</h3>
         <div class="price">$18.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Cadena Fina Bañada en Oro')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="pulsera">
         <div class="product-img">[ Foto Pulsera ]</div>
         <h3>Pulsera de Acero Inoxidable</h3>
         <div class="price">$12.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Pulsera de Acero Inoxidable')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="tobillera">
         <div class="product-img">[ Foto Tobillera ]</div>
         <h3>Tobillera Playera Ajustable</h3>
         <div class="price">$8.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Tobillera Playera Ajustable')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
-      <!-- Bolsos y Bandoleros -->
       <div class="product-card" data-tipo="bandolero">
         <div class="product-img">[ Foto Bandolero ]</div>
         <h3>Bandolero Urbano Unisex</h3>
         <div class="price">$22.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Bandolero Urbano Unisex')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
       <div class="product-card" data-tipo="bolso">
         <div class="product-img">[ Foto Bolso ]</div>
         <h3>Bolso de Mano Casual</h3>
         <div class="price">$30.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp('Bolso de Mano Casual')">Pedir por WhatsApp</button>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
       </div>
 
     </div>
@@ -439,14 +546,93 @@
   <footer>
     <p>&copy; 2026 <strong>Shaday</strong> - Todos los derechos reservados.</p>
     <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
+    <span class="admin-link" onclick="loginAdmin()">Acceso Admin</span>
   </footer>
 
   <!-- Script de Control -->
   <script>
-    // Tu número de WhatsApp (código de país sin signo +)
     const NUMERO_WHATSAPP = "584120000000";
+    const CLAVE_ADMIN = "Shaday2006";
 
-    // Filtrar productos al hacer clic en el menú desplegable
+    // Verificar estado de admin al cargar
+    document.addEventListener("DOMContentLoaded", () => {
+      if (sessionStorage.getItem("esAdmin") === "true") {
+        activarModoAdmin();
+      }
+    });
+
+    // Iniciar Sesión Administrador
+    function loginAdmin() {
+      const pass = prompt("Ingresa la clave de administrador:");
+      if (pass === CLAVE_ADMIN) {
+        sessionStorage.setItem("esAdmin", "true");
+        activarModoAdmin();
+        alert("¡Sesión iniciada como Administrador!");
+      } else if (pass !== null) {
+        alert("Clave incorrecta.");
+      }
+    }
+
+    // Activar Herramientas Admin en Pantalla
+    function activarModoAdmin() {
+      document.getElementById("adminPanel").style.display = "block";
+      const controles = document.querySelectorAll(".admin-controls-card");
+      controles.forEach(c => c.style.display = "flex");
+    }
+
+    // Agregar Producto
+    function agregarProducto() {
+      const nombre = document.getElementById("nuevoNombre").value.trim();
+      const precio = document.getElementById("nuevoPrecio").value.trim();
+      const tipo = document.getElementById("nuevoTipo").value;
+
+      if (!nombre || !precio) {
+        alert("Por favor completa el nombre y el precio.");
+        return;
+      }
+
+      const grid = document.getElementById("grid");
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.dataset.tipo = tipo;
+
+      card.innerHTML = `
+        <div class="product-img">[ Foto Producto ]</div>
+        <h3>${nombre}</h3>
+        <div class="price">${precio}</div>
+        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
+        <div class="admin-controls-card" style="display: flex;">
+          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
+          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
+        </div>
+      `;
+
+      grid.appendChild(card);
+      document.getElementById("nuevoNombre").value = "";
+      document.getElementById("nuevoPrecio").value = "";
+    }
+
+    // Editar Producto
+    function editarProducto(btn) {
+      const card = btn.closest(".product-card");
+      const h3 = card.querySelector("h3");
+      const price = card.querySelector(".price");
+
+      const nuevoNombre = prompt("Nuevo nombre del producto:", h3.innerText);
+      const nuevoPrecio = prompt("Nuevo precio:", price.innerText);
+
+      if (nuevoNombre !== null && nuevoNombre.trim() !== "") h3.innerText = nuevoNombre;
+      if (nuevoPrecio !== null && nuevoPrecio.trim() !== "") price.innerText = nuevoPrecio;
+    }
+
+    // Eliminar Producto
+    function eliminarProducto(btn) {
+      if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+        btn.closest(".product-card").remove();
+      }
+    }
+
+    // Filtrar Productos
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
       productos.forEach(prod => {
@@ -458,13 +644,14 @@
       });
     }
 
-    // Comprar un producto específico vía WhatsApp
-    function pedirPorWhatsApp(producto) {
+    // Contacto y Ventas por WhatsApp
+    function pedirPorWhatsApp(element) {
+      const card = element.closest('.product-card');
+      const producto = card.querySelector('h3').innerText;
       const mensaje = encodeURIComponent(`¡Hola Shaday! Me interesa consultar la disponibilidad del producto: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
 
-    // Contacto directo general por WhatsApp
     function abrirContactoWhatsApp() {
       const mensaje = encodeURIComponent("¡Hola Shaday! Quisiera recibir información sobre sus productos y envíos.");
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
