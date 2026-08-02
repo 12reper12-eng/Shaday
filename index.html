@@ -21,7 +21,7 @@
       display: flex; justify-content: space-between; align-items: center;
       position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
-    .brand-logo { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .brand-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background-color: #d4af37; }
     .brand-logo h1 { font-size: 24px; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; }
 
@@ -59,7 +59,7 @@
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     .section-title { text-align: center; margin-bottom: 30px; font-size: 28px; color: #111111; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* PANEL ADMIN (Oculto por defecto para usuarios normales) */
+    /* PANEL ADMIN */
     .admin-panel {
       display: none !important;
       background-color: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -72,27 +72,38 @@
     }
     .btn-admin-add { background-color: #d4af37; color: #111; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
 
+    /* CONTENEDOR DE CATEGORÍAS EN LA VISTA PRINCIPAL */
+    .category-group { margin-bottom: 45px; background: #fff; border: 1px solid #eaeaea; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .category-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 20px; }
+    .category-header h3 { font-size: 20px; color: #111; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-ver-mas { background: transparent; color: #d4af37; border: 1px solid #d4af37; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+    .btn-ver-mas:hover { background: #d4af37; color: #111; }
+
     /* PRODUCTOS */
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
-    .product-card { background-color: #ffffff; border: 1px solid #eeeeee; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .product-card { background-color: #ffffff; border: 1px solid #eeeeee; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
     .product-card.agotado { opacity: 0.7; }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
-    .badge-status { position: absolute; top: 10px; right: 10px; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+    .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.08); }
+    .badge-status { position: absolute; top: 10px; right: 10px; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
     .badge-disponible { background-color: #27ae60; color: white; }
     .badge-agotado { background-color: #c0392b; color: white; }
 
-    .product-img { width: 100%; height: 190px; background-color: #f5f5f5; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; overflow: hidden; }
+    .product-img { width: 100%; height: 170px; background-color: #f5f5f5; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; }
     .product-img img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
-    .product-card h3 { font-size: 17px; margin-bottom: 6px; color: #222; }
-    .product-card .price { color: #d4af37; font-weight: bold; font-size: 19px; margin-bottom: 12px; }
-    .btn-buy { background-color: #25d366; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 13px; transition: background-color 0.2s; }
+    .product-card h3 { font-size: 16px; margin-bottom: 6px; color: #222; }
+    .product-card .price { color: #d4af37; font-weight: bold; font-size: 17px; margin-bottom: 10px; }
+    .btn-buy { background-color: #25d366; color: #ffffff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 12px; transition: background-color 0.2s; }
     .btn-buy:disabled { background-color: #bdc3c7; cursor: not-allowed; }
     .btn-buy:hover:not(:disabled) { background-color: #1ebd56; }
 
     .admin-controls-card { display: none; margin-top: 10px; gap: 5px; flex-wrap: wrap; }
-    .btn-status { background-color: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; width: 100%; margin-bottom: 4px; }
-    .btn-edit { background-color: #e67e22; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1; }
-    .btn-delete { background-color: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1; }
+    .btn-status { background-color: #2980b9; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; width: 100%; margin-bottom: 4px; }
+    .btn-edit { background-color: #e67e22; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; flex: 1; }
+    .btn-delete { background-color: #e74c3c; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; flex: 1; }
+
+    /* BOTÓN REGRESAR AL INICIO CUANDO SE FILTRA */
+    .btn-volver-home { display: none; margin-bottom: 20px; background: #111; color: #d4af37; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+    .btn-volver-home:hover { background: #333; }
 
     /* MODAL LOGIN */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
@@ -110,20 +121,20 @@
     @media (max-width: 768px) {
       header { flex-direction: column; gap: 12px; padding: 15px; }
       .hero h2 { font-size: 28px; }
-      .products-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
+      .category-header { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand-logo">
+    <div class="brand-logo" onclick="irInicio()">
       <img src="icono.jpg" alt="Logo Jireh">
       <h1>Jireh</h1>
     </div>
 
     <nav>
-      <a href="#inicio">Inicio</a>
+      <a href="#inicio" onclick="irInicio()">Inicio</a>
       <div class="dropdown">
         <button class="dropdown-btn">Catálogo &#9662;</button>
         <div class="dropdown-content">
@@ -150,13 +161,14 @@
   <section class="hero" id="inicio">
     <h2>Estilo y Elegancia</h2>
     <p>Complementa tu presencia con nuestra colección exclusiva de relojes, joyería, bolsos y bandoleros Jireh.</p>
-    <a href="#grid" class="btn-main">Ver Colección</a>
+    <a href="#catalogo-seccion" class="btn-main">Ver Colección</a>
   </section>
 
-  <main class="container">
-    <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
+  <main class="container" id="catalogo-seccion">
+    <button class="btn-volver-home" id="btnVolverHome" onclick="irInicio()">← Volver al inicio por categorías</button>
+    <h2 class="section-title" id="catalogo-titulo">Catálogo General</h2>
 
-    <!-- PANEL ADMIN (Oculto por defecto para usuarios normales) -->
+    <!-- PANEL ADMIN -->
     <div class="admin-panel" id="adminPanel">
       <h3>Panel Administrador - Nuevo Producto</h3>
       <div class="admin-form">
@@ -181,8 +193,9 @@
       </div>
     </div>
 
-    <div class="products-grid" id="grid">
-      <p style="text-align: center; grid-column: 1/-1;">Cargando catálogo...</p>
+    <!-- CONTENEDOR DINÁMICO DEL CATÁLOGO -->
+    <div id="grid">
+      <p style="text-align: center;">Cargando catálogo...</p>
     </div>
   </main>
 
@@ -223,6 +236,21 @@
     const db = firebase.firestore();
 
     let esAdmin = false;
+    let categoriaActual = 'inicio'; // 'inicio' muestra por lotes/categorías; o un tipo específico
+    let listaProductosGlobal = [];
+
+    const nombresCategorias = {
+      'reloj-cuero': 'Relojes de Cuero',
+      'reloj-deportivo': 'Relojes Deportivos',
+      'reloj-hierro': 'Relojes de Hierro',
+      'correa-cuero': 'Correas de Cuero',
+      'correa-metal': 'Correas Metalizadas',
+      'cadena': 'Cadenas',
+      'pulsera': 'Pulseras',
+      'tobillera': 'Tobilleras',
+      'bandolero': 'Bandoleros',
+      'bolso': 'Bolsos'
+    };
 
     auth.onAuthStateChanged((user) => {
       const adminPanel = document.getElementById("adminPanel");
@@ -238,52 +266,126 @@
 
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
-        const grid = document.getElementById("grid");
-        grid.innerHTML = "";
-
-        if (snapshot.empty) {
-          grid.innerHTML = "<p style='text-align: center; grid-column: 1/-1;'>No hay productos agregados en el catálogo aún.</p>";
-          return;
-        }
-
+        listaProductosGlobal = [];
         snapshot.forEach((doc) => {
-          const prod = doc.data();
-          const id = doc.id;
-          const disponible = prod.disponible !== false;
-          const tipo = prod.tipo || "general";
-          const rutaFinal = (prod.imagen && prod.imagen.startsWith('http')) ? prod.imagen : 'icono.jpg';
-
-          const card = document.createElement("div");
-          card.className = `product-card ${disponible ? '' : 'agotado'}`;
-          card.setAttribute("data-tipo", tipo);
-
-          card.innerHTML = `
-            <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
-              ${disponible ? 'Disponible' : 'Agotado'}
-            </span>
-            <div class="product-img">
-              <img src="${rutaFinal}" alt="${prod.nombre}" onerror="this.onerror=null; this.src='icono.jpg';">
-            </div>
-            <h3>${prod.nombre}</h3>
-            <div class="price">${prod.precio}</div>
-            <button class="btn-buy" ${disponible ? '' : 'disabled'} onclick="pedirPorWhatsApp('${prod.nombre}')">
-              ${disponible ? 'Pedir por WhatsApp' : 'No disponible'}
-            </button>
-
-            <div class="admin-controls-card" style="display: ${esAdmin ? 'flex' : 'none'};">
-              <button class="btn-status" onclick="cambiarEstado('${id}', ${!disponible})">
-                Marcar como ${disponible ? 'Agotado' : 'Disponible'}
-              </button>
-              <button class="btn-edit" onclick="editarProductoFirestore('${id}', '${prod.nombre}', '${prod.precio}')">Editar</button>
-              <button class="btn-delete" onclick="eliminarProductoFirestore('${id}')">Eliminar</button>
-            </div>
-          `;
-
-          grid.appendChild(card);
+          listaProductosGlobal.push({ id: doc.id, ...doc.data() });
         });
+
+        renderizarPantalla();
       }, (error) => {
         console.error("Error al cargar productos:", error);
       });
+    }
+
+    function renderizarPantalla() {
+      const grid = document.getElementById("grid");
+      const titulo = document.getElementById("catalogo-titulo");
+      const btnVolver = document.getElementById("btnVolverHome");
+      grid.innerHTML = "";
+
+      if (listaProductosGlobal.length === 0) {
+        grid.innerHTML = "<p style='text-align: center;'>No hay productos agregados en el catálogo aún.</p>";
+        titulo.innerText = "Catálogo General";
+        return;
+      }
+
+      // VISTA 1: INICIO (Agrupado por lotes/categorías con botón "Ver más")
+      if (categoriaActual === 'inicio') {
+        titulo.innerText = "Nuestras Categorías";
+        btnVolver.style.display = "none";
+
+        // Agrupar productos por tipo
+        const agrupados = {};
+        listaProductosGlobal.forEach(prod => {
+          const tipo = prod.tipo || 'general';
+          if (!agrupados[tipo]) agrupados[tipo] = [];
+          agrupados[tipo].push(prod);
+        });
+
+        for (const [tipo, prods] of Object.entries(agrupados)) {
+          const nombreCat = nombresCategorias[tipo] || tipo.toUpperCase();
+          const grupoDiv = document.createElement("div");
+          grupoDiv.className = "category-group";
+
+          let htmlProductos = `<div class="products-grid">`;
+          // Mostrar máximo 4 productos en la vista previa del inicio
+          prods.slice(0, 4).forEach(prod => {
+            htmlProductos += crearTarjetaHTML(prod);
+          });
+          htmlProductos += `</div>`;
+
+          grupoDiv.innerHTML = `
+            <div class="category-header">
+              <h3>${nombreCat} (${prods.length})</h3>
+              ${prods.length > 0 ? `<button class="btn-ver-mas" onclick="filtrar('${tipo}')">Ver más (${prods.length})</button>` : ''}
+            </div>
+            ${htmlProductos}
+          `;
+          grid.appendChild(grupoDiv);
+        }
+      } 
+      // VISTA 2: FILTRADO ESPECÍFICO O TODOS
+      else {
+        btnVolver.style.display = "inline-block";
+        const filtrados = categoriaActual === 'todos' 
+          ? listaProductosGlobal 
+          : listaProductosGlobal.filter(p => p.tipo === categoriaActual);
+
+        titulo.innerText = categoriaActual === 'todos' ? 'Todos los Productos' : `Categoría: ${nombresCategorias[categoriaActual] || categoriaActual.toUpperCase()}`;
+
+        if (filtrados.length === 0) {
+          grid.innerHTML = "<p style='text-align: center;'>No hay productos en esta categoría aún.</p>";
+          return;
+        }
+
+        const gridProds = document.createElement("div");
+        gridProds.className = "products-grid";
+        filtrados.forEach(prod => {
+          gridProds.innerHTML += crearTarjetaHTML(prod);
+        });
+        grid.appendChild(gridProds);
+      }
+    }
+
+    function crearTarjetaHTML(prod) {
+      const disponible = prod.disponible !== false;
+      const rutaFinal = (prod.imagen && prod.imagen.startsWith('http')) ? prod.imagen : 'icono.jpg';
+
+      return `
+        <div class="product-card ${disponible ? '' : 'agotado'}">
+          <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
+            ${disponible ? 'Disponible' : 'Agotado'}
+          </span>
+          <div class="product-img">
+            <img src="${rutaFinal}" alt="${prod.nombre}" onerror="this.onerror=null; this.src='icono.jpg';">
+          </div>
+          <h3>${prod.nombre}</h3>
+          <div class="price">${prod.precio}</div>
+          <button class="btn-buy" ${disponible ? '' : 'disabled'} onclick="pedirPorWhatsApp('${prod.nombre}')">
+            ${disponible ? 'Pedir por WhatsApp' : 'No disponible'}
+          </button>
+
+          <div class="admin-controls-card" style="display: ${esAdmin ? 'flex' : 'none'};">
+            <button class="btn-status" onclick="cambiarEstado('${prod.id}', ${!disponible})">
+              Marcar como ${disponible ? 'Agotado' : 'Disponible'}
+            </button>
+            <button class="btn-edit" onclick="editarProductoFirestore('${prod.id}', '${prod.nombre}', '${prod.precio}')">Editar</button>
+            <button class="btn-delete" onclick="eliminarProductoFirestore('${prod.id}')">Eliminar</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function filtrar(tipo) {
+      categoriaActual = tipo;
+      renderizarPantalla();
+      window.location.hash = "#catalogo-seccion";
+    }
+
+    function irInicio() {
+      categoriaActual = 'inicio';
+      renderizarPantalla();
+      window.location.hash = "#inicio";
     }
 
     async function agregarProductoDirecto() {
@@ -378,21 +480,6 @@
 
     function cerrarSesionAdmin() {
       auth.signOut().then(() => alert("Has cerrado sesión de administrador."));
-    }
-
-    function filtrar(tipo) {
-      const productos = document.querySelectorAll('.product-card');
-      const titulo = document.getElementById("catalogo-titulo");
-
-      titulo.innerText = tipo === 'todos' ? 'Colección Completa' : `Categoría: ${tipo.replace('-', ' ').toUpperCase()}`;
-
-      productos.forEach(prod => {
-        if (tipo === 'todos' || prod.getAttribute("data-tipo") === tipo) {
-          prod.style.display = 'block';
-        } else {
-          prod.style.display = 'none';
-        }
-      });
     }
 
     function pedirPorWhatsApp(producto) {
