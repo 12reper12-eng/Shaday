@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shaday | Relojes, Alhajas & Accesorios</title>
+  
+  <!-- Carga de SDKs de Firebase (v9 Compat para HTML sencillo) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
   <style>
     /* Reset y Estilos Generales */
     * {
@@ -238,6 +243,60 @@
       flex: 1;
     }
 
+    /* Modal de Inicio de Sesión */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .modal-content h3 {
+      color: #d4af37;
+      margin-bottom: 15px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      color: #fff;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 10px;
+      background: #d4af37;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+    .btn-close-modal {
+      background: transparent;
+      color: #888;
+      border: none;
+      cursor: pointer;
+      float: right;
+      font-size: 18px;
+    }
+
     /* Rejilla de Productos */
     .products-grid {
       display: grid;
@@ -404,7 +463,7 @@
   <main class="container">
     <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
-    <!-- Panel para Agregar Producto (Solo Administrador) -->
+    <!-- Panel de Edición Admin -->
     <div class="admin-panel" id="adminPanel">
       <h3>Panel Administrador - Agregar Producto</h3>
       <div class="admin-form">
@@ -423,6 +482,7 @@
           <option value="bolso">Bolso</option>
         </select>
         <button class="btn-admin-add" onclick="agregarProducto()">Agregar Al Catálogo</button>
+        <button style="background: #e74c3c; color: #fff; border:none; padding: 10px; border-radius: 5px; cursor: pointer;" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
       </div>
     </div>
 
@@ -542,45 +602,104 @@
     </div>
   </main>
 
+  <!-- Modal de Login Administrador Firebase -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <button class="btn-close-modal" onclick="ocultarModalLogin()">✕</button>
+      <h3>Acceso Administrador</h3>
+      <input type="email" id="emailAdmin" placeholder="Correo electrónico">
+      <input type="password" id="passwordAdmin" placeholder="Contraseña">
+      <button class="btn-login" onclick="loginConFirebase()">Iniciar Sesión</button>
+    </div>
+  </div>
+
   <!-- Pie de Página -->
   <footer>
     <p>&copy; 2026 <strong>Shaday</strong> - Todos los derechos reservados.</p>
     <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
-    <span class="admin-link" onclick="loginAdmin()">Acceso Admin</span>
+    <span class="admin-link" onclick="mostrarModalLogin()">Acceso Admin</span>
   </footer>
 
-  <!-- Script de Control -->
+  <!-- Script Firebase y Funcionalidad -->
   <script>
     const NUMERO_WHATSAPP = "584120000000";
-    const CLAVE_ADMIN = "Shaday2006";
 
-    // Verificar estado de admin al cargar
-    document.addEventListener("DOMContentLoaded", () => {
-      if (sessionStorage.getItem("esAdmin") === "true") {
+    // 1. CONFIGURACIÓN DE TU PROYECTO FIREBASE
+    // Reemplaza los siguientes valores con los datos de tu consola de Firebase
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "tu-proyecto.firebaseapp.com",
+      projectId: "tu-proyecto",
+      storageBucket: "tu-proyecto.appspot.com",
+      messagingSenderId: "000000000000",
+      appId: "1:000000000000:web:000000000000"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Escuchar el estado de la autenticación
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // Si el correo requiere verificación previa, podemos comprobarlo:
+        if (!user.emailVerified) {
+          alert("Te hemos enviado un correo de verificación. Por favor revisa tu bandeja de entrada.");
+          // Opcional: enviar enlace de verificación si no lo ha recibido
+          user.sendEmailVerification();
+        }
         activarModoAdmin();
+      } else {
+        desactivarModoAdmin();
       }
     });
 
-    // Iniciar Sesión Administrador
-    function loginAdmin() {
-      const pass = prompt("Ingresa la clave de administrador:");
-      if (pass === CLAVE_ADMIN) {
-        sessionStorage.setItem("esAdmin", "true");
-        activarModoAdmin();
-        alert("¡Sesión iniciada como Administrador!");
-      } else if (pass !== null) {
-        alert("Clave incorrecta.");
-      }
+    // Abrir / Cerrar Modal Login
+    function mostrarModalLogin() {
+      document.getElementById("loginModal").style.display = "flex";
     }
 
-    // Activar Herramientas Admin en Pantalla
+    function ocultarModalLogin() {
+      document.getElementById("loginModal").style.display = "none";
+    }
+
+    // Iniciar Sesión con Firebase
+    function loginConFirebase() {
+      const email = document.getElementById("emailAdmin").value;
+      const pass = document.getElementById("passwordAdmin").value;
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then((userCredential) => {
+          ocultarModalLogin();
+          alert("¡Acceso correcto!");
+        })
+        .catch((error) => {
+          alert("Error de autenticación: " + error.message);
+        });
+    }
+
+    // Cerrar Sesión
+    function cerrarSesionAdmin() {
+      auth.signOut().then(() => {
+        alert("Sesión cerrada.");
+      });
+    }
+
+    // Activar Herramientas Admin
     function activarModoAdmin() {
       document.getElementById("adminPanel").style.display = "block";
       const controles = document.querySelectorAll(".admin-controls-card");
       controles.forEach(c => c.style.display = "flex");
     }
 
-    // Agregar Producto
+    // Desactivar Herramientas Admin
+    function desactivarModoAdmin() {
+      document.getElementById("adminPanel").style.display = "none";
+      const controles = document.querySelectorAll(".admin-controls-card");
+      controles.forEach(c => c.style.display = "none");
+    }
+
+    // Funcionalidades del Catálogo
     function agregarProducto() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
@@ -612,7 +731,6 @@
       document.getElementById("nuevoPrecio").value = "";
     }
 
-    // Editar Producto
     function editarProducto(btn) {
       const card = btn.closest(".product-card");
       const h3 = card.querySelector("h3");
@@ -625,14 +743,12 @@
       if (nuevoPrecio !== null && nuevoPrecio.trim() !== "") price.innerText = nuevoPrecio;
     }
 
-    // Eliminar Producto
     function eliminarProducto(btn) {
-      if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      if (confirm("¿Estás seguro de eliminar este producto?")) {
         btn.closest(".product-card").remove();
       }
     }
 
-    // Filtrar Productos
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
       productos.forEach(prod => {
@@ -644,7 +760,6 @@
       });
     }
 
-    // Contacto y Ventas por WhatsApp
     function pedirPorWhatsApp(element) {
       const card = element.closest('.product-card');
       const producto = card.querySelector('h3').innerText;
