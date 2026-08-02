@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jireh | Relojes, Alhajas & Accesorios</title>
   
-  <link rel="icon" type="image/jpeg" href="icono.jpg">
+  <link rel="icon" type="image/jpeg" href="Icono.jpg">
 
   <!-- Carga de SDKs de Firebase (v9 Compat - Auth y Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -177,7 +177,7 @@
       letter-spacing: 1px;
     }
 
-    /* Panel de Administración */
+    /* Panel Administrador */
     .admin-panel {
       display: none;
       background-color: #1a1a1a;
@@ -213,98 +213,6 @@
       padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
-    }
-
-    /* Controles Admin en la tarjeta */
-    .admin-controls-card {
-      display: none;
-      margin-top: 10px;
-      gap: 5px;
-      flex-wrap: wrap;
-    }
-    .btn-status {
-      background-color: #2980b9;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 11px;
-      flex: 1 1 100%;
-    }
-    .btn-edit {
-      background-color: #e67e22;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 11px;
-      flex: 1;
-    }
-    .btn-delete {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 11px;
-      flex: 1;
-    }
-
-    /* Modal de Login */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: #1a1a1a;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    .modal-content h3 {
-      color: #d4af37;
-      margin-bottom: 15px;
-    }
-    .modal-content input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #2a2a2a;
-      color: #fff;
-    }
-    .btn-login {
-      width: 100%;
-      padding: 10px;
-      background: #d4af37;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 5px;
-    }
-    .btn-close-modal {
-      background: transparent;
-      color: #888;
-      border: none;
-      cursor: pointer;
-      float: right;
-      font-size: 18px;
     }
 
     /* Tarjetas de Productos */
@@ -397,6 +305,99 @@
       background-color: #1ebd56;
     }
 
+    /* Controles de Administración */
+    .admin-controls-card {
+      display: none;
+      margin-top: 10px;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .btn-status {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    .btn-edit {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      flex: 1;
+    }
+    .btn-delete {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      flex: 1;
+    }
+
+    /* Modal Login */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .modal-content h3 {
+      color: #d4af37;
+      margin-bottom: 15px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      color: #fff;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 10px;
+      background: #d4af37;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+    .btn-close-modal {
+      background: transparent;
+      color: #888;
+      border: none;
+      cursor: pointer;
+      float: right;
+      font-size: 18px;
+    }
+
     footer {
       background-color: #111111;
       color: #888888;
@@ -443,7 +444,7 @@
   <!-- Encabezado -->
   <header>
     <div class="brand-logo">
-      <img src="icono.jpg" alt="Logo Jireh">
+      <img src="Icono.jpg" alt="Logo Jireh">
       <h1>Jireh</h1>
     </div>
 
@@ -486,8 +487,8 @@
       <h3>Panel Administrador - Nuevo Producto</h3>
       <div class="admin-form">
         <input type="text" id="nuevoNombre" placeholder="Nombre del Producto">
-        <input type="text" id="nuevoPrecio" placeholder="Precio (ej: $25.00)">
-        <input type="text" id="nuevaImagen" placeholder="Ruta de la Imagen (ej: relojes/reloj1.jpg o icono.jpg)">
+        <input type="text" id="nuevoPrecio" placeholder="Precio (ej: 25$)">
+        <input type="text" id="nuevaImagen" placeholder="Nombre de imagen (ej: duo.jpg)">
         <select id="nuevoTipo">
           <option value="reloj-cuero">Reloj de Cuero</option>
           <option value="reloj-deportivo">Reloj Deportivo</option>
@@ -547,18 +548,44 @@
 
     let esAdmin = false;
 
-    // Escuchar estado de autenticación
+    // Escuchar autenticación
     auth.onAuthStateChanged((user) => {
       esAdmin = !!user;
-      if (esAdmin) {
-        document.getElementById("adminPanel").style.display = "block";
-      } else {
-        document.getElementById("adminPanel").style.display = "none";
-      }
+      document.getElementById("adminPanel").style.display = esAdmin ? "block" : "none";
       cargarProductosFirestore();
     });
 
-    // Cargar productos en tiempo real desde Firestore
+    // Función Inteligente para construir la ruta exacta del archivo
+    function procesarRutaImagen(nombreInput, tipoProducto) {
+      if (!nombreInput || nombreInput.trim() === "") return "Icono.jpg";
+      
+      let img = nombreInput.trim();
+
+      // Si el usuario pone solo el nombre de la carpeta "relojes" sin archivo
+      if (img === "relojes" || img === "relojes/") return "Icono.jpg";
+
+      // Si falta la extensión (.jpg, .png, etc.), se le asigna .jpg por defecto
+      if (!img.includes(".")) {
+        img += ".jpg";
+      }
+
+      // Si no especificaste carpeta manual (ej: "duo.jpg"), el sistema detecta cuál carpeta le corresponde
+      if (!img.includes("/")) {
+        if (tipoProducto.startsWith("reloj")) {
+          img = "relojes/" + img;
+        } else if (tipoProducto.startsWith("correa")) {
+          img = "correas/" + img;
+        } else if (tipoProducto === "cadena" || tipoProducto === "pulsera" || tipoProducto === "tobillera") {
+          img = "joyeria/" + img;
+        } else if (tipoProducto === "bolso" || tipoProducto === "bandolero") {
+          img = "bolsos/" + img;
+        }
+      }
+
+      return img;
+    }
+
+    // Cargar productos desde Firestore
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
         const grid = document.getElementById("grid");
@@ -572,19 +599,22 @@
         snapshot.forEach((doc) => {
           const prod = doc.data();
           const id = doc.id;
-          const disponible = prod.disponible !== false; // true por defecto
-          const rutaImagen = prod.imagen || "icono.jpg";
+          const disponible = prod.disponible !== false;
+          const tipo = prod.tipo || "general";
+          
+          // Obtener ruta con auto-corrección
+          const rutaFinal = procesarRutaImagen(prod.imagen, tipo);
 
           const card = document.createElement("div");
           card.className = `product-card ${disponible ? '' : 'agotado'}`;
-          card.dataset.tipo = prod.tipo || 'general';
+          card.dataset.tipo = tipo;
 
           card.innerHTML = `
             <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
               ${disponible ? 'Disponible' : 'Agotado'}
             </span>
             <div class="product-img">
-              <img src="${rutaImagen}" alt="${prod.nombre}" onerror="this.src='icono.jpg'">
+              <img src="${rutaFinal}" alt="${prod.nombre}" onerror="this.onerror=null; this.src='Icono.jpg';">
             </div>
             <h3>${prod.nombre}</h3>
             <div class="price">${prod.precio}</div>
@@ -596,7 +626,7 @@
               <button class="btn-status" onclick="cambiarEstado('${id}', ${!disponible})">
                 Marcar como ${disponible ? 'Agotado' : 'Disponible'}
               </button>
-              <button class="btn-edit" onclick="editarProductoFirestore('${id}', '${prod.nombre}', '${prod.precio}', '${rutaImagen}')">Editar</button>
+              <button class="btn-edit" onclick="editarProductoFirestore('${id}', '${prod.nombre}', '${prod.precio}', '${prod.imagen || ''}')">Editar</button>
               <button class="btn-delete" onclick="eliminarProductoFirestore('${id}')">Eliminar</button>
             </div>
           `;
@@ -606,15 +636,15 @@
       });
     }
 
-    // Agregar nuevo producto a Firestore
+    // Guardar Producto
     function agregarProductoFirestore() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
-      const imagen = document.getElementById("nuevaImagen").value.trim() || "icono.jpg";
+      const imagen = document.getElementById("nuevaImagen").value.trim();
       const tipo = document.getElementById("nuevoTipo").value;
 
       if (!nombre || !precio) {
-        alert("Por favor completa el nombre y el precio.");
+        alert("Ingresa el nombre y el precio del producto.");
         return;
       }
 
@@ -628,40 +658,40 @@
         document.getElementById("nuevoNombre").value = "";
         document.getElementById("nuevoPrecio").value = "";
         document.getElementById("nuevaImagen").value = "";
-        alert("¡Producto agregado con éxito!");
-      }).catch(err => alert("Error al guardar: " + err.message));
+        alert("¡Producto agregado correctamente!");
+      }).catch(err => alert("Error: " + err.message));
     }
 
-    // Cambiar Disponibilidad (Disponible / Agotado)
+    // Cambiar estado Disponible / Agotado
     function cambiarEstado(id, nuevoEstado) {
       db.collection("productos").doc(id).update({
         disponible: nuevoEstado
       });
     }
 
-    // Editar Producto (Nombre, Precio, Ruta de la Imagen)
+    // Editar Producto desde Admin
     function editarProductoFirestore(id, nombreActual, precioActual, imagenActual) {
-      const nuevoNombre = prompt("Nuevo nombre:", nombreActual);
-      const nuevoPrecio = prompt("Nuevo precio:", precioActual);
-      const nuevaImagen = prompt("Ruta/URL de la nueva imagen (ej: relojes/reloj2.jpg):", imagenActual);
+      const nuevoNombre = prompt("Nombre del producto:", nombreActual);
+      const nuevoPrecio = prompt("Precio del producto:", precioActual);
+      const nuevaImagen = prompt("Nombre de la foto (ej: duo.jpg):", imagenActual);
 
       if (nuevoNombre && nuevoPrecio) {
         db.collection("productos").doc(id).update({
           nombre: nuevoNombre.trim(),
           precio: nuevoPrecio.trim(),
-          imagen: (nuevaImagen ? nuevaImagen.trim() : "icono.jpg")
+          imagen: nuevaImagen ? nuevaImagen.trim() : ""
         });
       }
     }
 
     // Eliminar Producto
     function eliminarProductoFirestore(id) {
-      if (confirm("¿Seguro que deseas eliminar este producto?")) {
+      if (confirm("¿Estás seguro de eliminar este producto?")) {
         db.collection("productos").doc(id).delete();
       }
     }
 
-    // Modal & Auth
+    // Controles Modal & Auth
     function mostrarModalLogin() { document.getElementById("loginModal").style.display = "flex"; }
     function ocultarModalLogin() { document.getElementById("loginModal").style.display = "none"; }
 
@@ -670,13 +700,14 @@
       const pass = document.getElementById("passwordAdmin").value;
       auth.signInWithEmailAndPassword(email, pass)
         .then(() => ocultarModalLogin())
-        .catch((error) => alert("Error: " + error.message));
+        .catch((error) => alert("Error al iniciar sesión: " + error.message));
     }
 
     function cerrarSesionAdmin() {
-      auth.signOut().then(() => alert("Sesión cerrada."));
+      auth.signOut().then(() => alert("Sesión de administrador cerrada."));
     }
 
+    // Filtros de navegación
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
       productos.forEach(prod => {
@@ -688,6 +719,7 @@
       });
     }
 
+    // Redirección WhatsApp
     function pedirPorWhatsApp(producto) {
       const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad del producto: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
