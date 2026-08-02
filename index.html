@@ -7,10 +7,10 @@
   
   <link rel="icon" type="image/jpeg" href="icono.jpg">
 
-  <!-- Firebase SDKs (Firestore, versión compat) -->
+  <!-- Firebase SDKs (Realtime Database y Auth) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -101,11 +101,9 @@
     .btn-edit { background-color: #e67e22; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; flex: 1; }
     .btn-delete { background-color: #e74c3c; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; flex: 1; }
 
-    /* BOTÓN REGRESAR AL INICIO CUANDO SE FILTRA */
     .btn-volver-home { display: none; margin-bottom: 20px; background: #111; color: #d4af37; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
     .btn-volver-home:hover { background: #333; }
 
-    /* MODAL LOGIN */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
     .modal-content { background: #1a1a1a; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     .modal-content h3 { color: #d4af37; margin-bottom: 15px; }
@@ -222,6 +220,7 @@
     const firebaseConfig = {
       apiKey: "AIzaSyAWLwP7pAi0-DhrueFLa8fn8Vs_3e8YYJA",
       authDomain: "shaday-5cbaf.firebaseapp.com",
+      databaseURL: "https://shaday-5cbaf-default-rtdb.firebaseio.com",
       projectId: "shaday-5cbaf",
       storageBucket: "shaday-5cbaf.firebasestorage.app",
       messagingSenderId: "48875691883",
@@ -233,10 +232,10 @@
       firebase.initializeApp(firebaseConfig);
     }
     const auth = firebase.auth();
-    const db = firebase.firestore();
+    const db = firebase.database();
 
     let esAdmin = false;
-    let categoriaActual = 'inicio'; // 'inicio' muestra por lotes/categorías; o un tipo específico
+    let categoriaActual = 'inicio';
     let listaProductosGlobal = [];
 
     const nombresCategorias = {
@@ -261,16 +260,19 @@
         esAdmin = false;
         adminPanel.classList.remove("activo");
       }
-      cargarProductosFirestore();
+      cargarProductosRealtime();
     });
 
-    function cargarProductosFirestore() {
-      db.collection("productos").onSnapshot((snapshot) => {
+    function cargarProductosRealtime() {
+      const ref = db.ref("productos");
+      ref.on("value", (snapshot) => {
         listaProductosGlobal = [];
-        snapshot.forEach((doc) => {
-          listaProductosGlobal.push({ id: doc.id, ...doc.data() });
-        });
-
+        const data = snapshot.val();
+        if (data) {
+          Object.keys(data).forEach((key) => {
+            listaProductosGlobal.push({ id: key, ...data[key] });
+          });
+        }
         renderizarPantalla();
       }, (error) => {
         console.error("Error al cargar productos:", error);
@@ -289,12 +291,10 @@
         return;
       }
 
-      // VISTA 1: INICIO (Agrupado por lotes/categorías con botón "Ver más")
       if (categoriaActual === 'inicio') {
         titulo.innerText = "Nuestras Categorías";
         btnVolver.style.display = "none";
 
-        // Agrupar productos por tipo
         const agrupados = {};
         listaProductosGlobal.forEach(prod => {
           const tipo = prod.tipo || 'general';
@@ -308,7 +308,6 @@
           grupoDiv.className = "category-group";
 
           let htmlProductos = `<div class="products-grid">`;
-          // Mostrar máximo 4 productos en la vista previa del inicio
           prods.slice(0, 4).forEach(prod => {
             htmlProductos += crearTarjetaHTML(prod);
           });
@@ -323,9 +322,7 @@
           `;
           grid.appendChild(grupoDiv);
         }
-      } 
-      // VISTA 2: FILTRADO ESPECÍFICO O TODOS
-      else {
+      } else {
         btnVolver.style.display = "inline-block";
         const filtrados = categoriaActual === 'todos' 
           ? listaProductosGlobal 
@@ -369,8 +366,8 @@
             <button class="btn-status" onclick="cambiarEstado('${prod.id}', ${!disponible})">
               Marcar como ${disponible ? 'Agotado' : 'Disponible'}
             </button>
-            <button class="btn-edit" onclick="editarProductoFirestore('${prod.id}', '${prod.nombre}', '${prod.precio}')">Editar</button>
-            <button class="btn-delete" onclick="eliminarProductoFirestore('${prod.id}')">Eliminar</button>
+            <button class="btn-edit" onclick="editarProductoRealtime('${prod.id}', '${prod.nombre}', '${prod.precio}')">Editar</button>
+            <button class="btn-delete" onclick="eliminarProductoRealtime('${prod.id}')">Eliminar</button>
           </div>
         </div>
       `;
@@ -420,9 +417,9 @@
         }
 
         const urlImagen = data.data.url;
-        btn.innerText = "Guardando en Firebase...";
+        btn.innerText = "Guardando en Realtime DB...";
 
-        await db.collection("productos").add({
+        await db.ref("productos").push({
           nombre: nombre,
           precio: precio,
           tipo: tipo,
@@ -446,24 +443,24 @@
     }
 
     function cambiarEstado(id, nuevoEstado) {
-      db.collection("productos").doc(id).update({ disponible: nuevoEstado });
+      db.ref("productos/" + id).update({ disponible: nuevoEstado });
     }
 
-    function editarProductoFirestore(id, nombreActual, precioActual) {
+    function editarProductoRealtime(id, nombreActual, precioActual) {
       const nuevoNombre = prompt("Nuevo nombre:", nombreActual);
       const nuevoPrecio = prompt("Nuevo precio:", precioActual);
 
       if (nuevoNombre && nuevoPrecio) {
-        db.collection("productos").doc(id).update({
+        db.ref("productos/" + id).update({
           nombre: nuevoNombre.trim(),
           precio: nuevoPrecio.trim()
         });
       }
     }
 
-    function eliminarProductoFirestore(id) {
+    function eliminarProductoRealtime(id) {
       if (confirm("¿Seguro que deseas eliminar este producto del catálogo?")) {
-        db.collection("productos").doc(id).delete();
+        db.ref("productos/" + id).remove();
       }
     }
 
