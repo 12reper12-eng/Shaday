@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jireh | Relojes, Alhajas & Accesorios</title>
   
-  <!-- Ícono de la Pestaña (Favicon) -->
   <link rel="icon" type="image/jpeg" href="icono.jpg">
 
-  <!-- Carga de SDKs de Firebase (v9 Compat) -->
+  <!-- Carga de SDKs de Firebase (v9 Compat - Auth y Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
-    /* Reset y Estilos Generales */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -26,7 +25,6 @@
       line-height: 1.6;
     }
 
-    /* Encabezado Responsivo */
     header {
       background-color: #111111;
       color: #ffffff;
@@ -58,7 +56,6 @@
       text-transform: uppercase;
     }
 
-    /* Menú de Navegación */
     nav {
       display: flex;
       align-items: center;
@@ -81,7 +78,6 @@
       color: #d4af37;
     }
 
-    /* Menú Desplegable */
     .dropdown {
       position: relative;
       display: inline-block;
@@ -127,7 +123,6 @@
       color: #d4af37;
     }
 
-    /* Banner Principal (Hero) */
     .hero {
       background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80');
       background-size: cover;
@@ -168,7 +163,6 @@
       transform: scale(1.03);
     }
 
-    /* Contenedor del Catálogo */
     .container {
       max-width: 1100px;
       margin: 40px auto;
@@ -220,10 +214,23 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    /* Controles Admin en la tarjeta */
     .admin-controls-card {
       display: none;
       margin-top: 10px;
       gap: 5px;
+      flex-wrap: wrap;
+    }
+    .btn-status {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      flex: 1 1 100%;
     }
     .btn-edit {
       background-color: #e67e22;
@@ -232,7 +239,7 @@
       padding: 5px 10px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
       flex: 1;
     }
     .btn-delete {
@@ -242,11 +249,11 @@
       padding: 5px 10px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
       flex: 1;
     }
 
-    /* Modal de Inicio de Sesión */
+    /* Modal de Login */
     .modal {
       display: none;
       position: fixed;
@@ -300,7 +307,7 @@
       font-size: 18px;
     }
 
-    /* Rejilla de Productos */
+    /* Tarjetas de Productos */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -314,11 +321,34 @@
       text-align: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.03);
       transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .product-card.agotado {
+      opacity: 0.7;
     }
     .product-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.08);
     }
+    .badge-status {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-disponible {
+      background-color: #27ae60;
+      color: white;
+    }
+    .badge-agotado {
+      background-color: #c0392b;
+      color: white;
+    }
+
     .product-img {
       width: 100%;
       height: 190px;
@@ -334,7 +364,7 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 10px;
+      padding: 5px;
     }
     .product-card h3 {
       font-size: 17px;
@@ -359,11 +389,14 @@
       font-size: 13px;
       transition: background-color 0.2s;
     }
-    .btn-buy:hover {
+    .btn-buy:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+    .btn-buy:hover:not(:disabled) {
       background-color: #1ebd56;
     }
 
-    /* Pie de Página */
     footer {
       background-color: #111111;
       color: #888888;
@@ -398,21 +431,9 @@
       .hero h2 {
         font-size: 28px;
       }
-      .hero p {
-        font-size: 15px;
-      }
       .products-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 15px;
-      }
-      .product-card {
-        padding: 12px;
-      }
-      .product-img {
-        height: 140px;
-      }
-      .product-card h3 {
-        font-size: 15px;
       }
     }
   </style>
@@ -426,32 +447,23 @@
       <h1>Jireh</h1>
     </div>
 
-    <!-- Navegación -->
     <nav>
       <a href="#inicio">Inicio</a>
       <div class="dropdown">
         <button class="dropdown-btn">Catálogo &#9662;</button>
         <div class="dropdown-content">
           <div class="dropdown-section">
-            <div class="dropdown-section-title">Relojes</div>
+            <div class="dropdown-section-title">Filtros</div>
+            <a href="#grid" onclick="filtrar('todos')">Todos los Productos</a>
             <a href="#grid" onclick="filtrar('reloj-cuero')">Relojes de Cuero</a>
             <a href="#grid" onclick="filtrar('reloj-deportivo')">Relojes Deportivos</a>
-            <a href="#grid" onclick="filtrar('reloj-hierro')">Relojes de Correa de Hierro</a>
-          </div>
-          <div class="dropdown-section">
-            <div class="dropdown-section-title">Correas</div>
+            <a href="#grid" onclick="filtrar('reloj-hierro')">Relojes de Hierro</a>
             <a href="#grid" onclick="filtrar('correa-cuero')">Correas de Cuero</a>
             <a href="#grid" onclick="filtrar('correa-metal')">Correas Metalizadas</a>
-          </div>
-          <div class="dropdown-section">
-            <div class="dropdown-section-title">Joyería</div>
             <a href="#grid" onclick="filtrar('cadena')">Cadenas</a>
             <a href="#grid" onclick="filtrar('pulsera')">Pulseras</a>
             <a href="#grid" onclick="filtrar('tobillera')">Tobilleras</a>
-          </div>
-          <div class="dropdown-section">
-            <div class="dropdown-section-title">Bolsos & Bandoleros</div>
-            <a href="#grid" onclick="filtrar('bolso')">Bolsos de Mano</a>
+            <a href="#grid" onclick="filtrar('bolso')">Bolsos</a>
             <a href="#grid" onclick="filtrar('bandolero')">Bandoleros</a>
           </div>
         </div>
@@ -460,23 +472,22 @@
     </nav>
   </header>
 
-  <!-- Banner Hero -->
   <section class="hero" id="inicio">
     <h2>Estilo y Elegancia</h2>
     <p>Complementa tu presencia con nuestra colección exclusiva de relojes, joyería, bolsos y bandoleros Jireh.</p>
     <a href="#grid" class="btn-main">Ver Colección</a>
   </section>
 
-  <!-- Sección Catálogo -->
   <main class="container">
     <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
-    <!-- Panel de Edición Admin -->
+    <!-- Panel Administrador -->
     <div class="admin-panel" id="adminPanel">
-      <h3>Panel Administrador - Agregar Producto</h3>
+      <h3>Panel Administrador - Nuevo Producto</h3>
       <div class="admin-form">
         <input type="text" id="nuevoNombre" placeholder="Nombre del Producto">
         <input type="text" id="nuevoPrecio" placeholder="Precio (ej: $25.00)">
+        <input type="text" id="nuevaImagen" placeholder="Ruta de la Imagen (ej: relojes/reloj1.jpg o icono.jpg)">
         <select id="nuevoTipo">
           <option value="reloj-cuero">Reloj de Cuero</option>
           <option value="reloj-deportivo">Reloj Deportivo</option>
@@ -489,128 +500,18 @@
           <option value="bandolero">Bandolero</option>
           <option value="bolso">Bolso</option>
         </select>
-        <button class="btn-admin-add" onclick="agregarProducto()">Agregar Al Catálogo</button>
+        <button class="btn-admin-add" onclick="agregarProductoFirestore()">Guardar Producto</button>
         <button style="background: #e74c3c; color: #fff; border:none; padding: 10px; border-radius: 5px; cursor: pointer;" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
       </div>
     </div>
 
-    <!-- Rejilla de Productos -->
+    <!-- Contenedor dinámico de Productos -->
     <div class="products-grid" id="grid">
-
-      <div class="product-card" data-tipo="reloj-cuero">
-        <div class="product-img"><img src="icono.jpg" alt="Reloj Ejecutivo de Cuero"></div>
-        <h3>Reloj Ejecutivo de Cuero</h3>
-        <div class="price">$25.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="reloj-deportivo">
-        <div class="product-img"><img src="icono.jpg" alt="Reloj Deportivo Resistente"></div>
-        <h3>Reloj Deportivo Resistente</h3>
-        <div class="price">$30.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="reloj-hierro">
-        <div class="product-img"><img src="icono.jpg" alt="Reloj Elegante Correa de Hierro"></div>
-        <h3>Reloj Elegante Correa de Hierro</h3>
-        <div class="price">$35.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="correa-cuero">
-        <div class="product-img"><img src="icono.jpg" alt="Correa de Repuesto en Cuero"></div>
-        <h3>Correa de Repuesto en Cuero</h3>
-        <div class="price">$10.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="correa-metal">
-        <div class="product-img"><img src="icono.jpg" alt="Correa Metálica Ajustable"></div>
-        <h3>Correa Metálica Ajustable</h3>
-        <div class="price">$12.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="cadena">
-        <div class="product-img"><img src="icono.jpg" alt="Cadena Fina Bañada en Oro"></div>
-        <h3>Cadena Fina Bañada en Oro</h3>
-        <div class="price">$18.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="pulsera">
-        <div class="product-img"><img src="icono.jpg" alt="Pulsera de Acero Inoxidable"></div>
-        <h3>Pulsera de Acero Inoxidable</h3>
-        <div class="price">$12.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="tobillera">
-        <div class="product-img"><img src="icono.jpg" alt="Tobillera Playera Ajustable"></div>
-        <h3>Tobillera Playera Ajustable</h3>
-        <div class="price">$8.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="bandolero">
-        <div class="product-img"><img src="icono.jpg" alt="Bandolero Urbano Unisex"></div>
-        <h3>Bandolero Urbano Unisex</h3>
-        <div class="price">$22.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
-      <div class="product-card" data-tipo="bolso">
-        <div class="product-img"><img src="icono.jpg" alt="Bolso de Mano Casual"></div>
-        <h3>Bolso de Mano Casual</h3>
-        <div class="price">$30.00</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      </div>
-
+      <p style="text-align: center; grid-column: 1/-1;">Cargando catálogo...</p>
     </div>
   </main>
 
-  <!-- Modal de Login Administrador -->
+  <!-- Modal Login Admin -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <button class="btn-close-modal" onclick="ocultarModalLogin()">✕</button>
@@ -621,14 +522,12 @@
     </div>
   </div>
 
-  <!-- Pie de Página -->
   <footer>
     <p>&copy; 2026 <strong>Jireh</strong> - Todos los derechos reservados.</p>
     <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
     <span class="admin-link" onclick="mostrarModalLogin()">Acceso Admin</span>
   </footer>
 
-  <!-- Script Firebase y Funcionalidad del Sitio -->
   <script>
     const NUMERO_WHATSAPP = "584120000000";
 
@@ -644,58 +543,74 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
+    let esAdmin = false;
+
+    // Escuchar estado de autenticación
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        activarModoAdmin();
+      esAdmin = !!user;
+      if (esAdmin) {
+        document.getElementById("adminPanel").style.display = "block";
       } else {
-        desactivarModoAdmin();
+        document.getElementById("adminPanel").style.display = "none";
       }
+      cargarProductosFirestore();
     });
 
-    function mostrarModalLogin() {
-      document.getElementById("loginModal").style.display = "flex";
-    }
+    // Cargar productos en tiempo real desde Firestore
+    function cargarProductosFirestore() {
+      db.collection("productos").onSnapshot((snapshot) => {
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
 
-    function ocultarModalLogin() {
-      document.getElementById("loginModal").style.display = "none";
-    }
+        if (snapshot.empty) {
+          grid.innerHTML = "<p style='text-align: center; grid-column: 1/-1;'>No hay productos agregados en el catálogo.</p>";
+          return;
+        }
 
-    function loginConFirebase() {
-      const email = document.getElementById("emailAdmin").value;
-      const pass = document.getElementById("passwordAdmin").value;
+        snapshot.forEach((doc) => {
+          const prod = doc.data();
+          const id = doc.id;
+          const disponible = prod.disponible !== false; // true por defecto
+          const rutaImagen = prod.imagen || "icono.jpg";
 
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          ocultarModalLogin();
-          alert("¡Acceso correcto como Administrador!");
-        })
-        .catch((error) => {
-          alert("Error: " + error.message);
+          const card = document.createElement("div");
+          card.className = `product-card ${disponible ? '' : 'agotado'}`;
+          card.dataset.tipo = prod.tipo || 'general';
+
+          card.innerHTML = `
+            <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
+              ${disponible ? 'Disponible' : 'Agotado'}
+            </span>
+            <div class="product-img">
+              <img src="${rutaImagen}" alt="${prod.nombre}" onerror="this.src='icono.jpg'">
+            </div>
+            <h3>${prod.nombre}</h3>
+            <div class="price">${prod.precio}</div>
+            <button class="btn-buy" ${disponible ? '' : 'disabled'} onclick="pedirPorWhatsApp('${prod.nombre}')">
+              ${disponible ? 'Pedir por WhatsApp' : 'No disponible'}
+            </button>
+
+            <div class="admin-controls-card" style="display: ${esAdmin ? 'flex' : 'none'};">
+              <button class="btn-status" onclick="cambiarEstado('${id}', ${!disponible})">
+                Marcar como ${disponible ? 'Agotado' : 'Disponible'}
+              </button>
+              <button class="btn-edit" onclick="editarProductoFirestore('${id}', '${prod.nombre}', '${prod.precio}', '${rutaImagen}')">Editar</button>
+              <button class="btn-delete" onclick="eliminarProductoFirestore('${id}')">Eliminar</button>
+            </div>
+          `;
+
+          grid.appendChild(card);
         });
-    }
-
-    function cerrarSesionAdmin() {
-      auth.signOut().then(() => {
-        alert("Sesión cerrada.");
       });
     }
 
-    function activarModoAdmin() {
-      document.getElementById("adminPanel").style.display = "block";
-      const controles = document.querySelectorAll(".admin-controls-card");
-      controles.forEach(c => c.style.display = "flex");
-    }
-
-    function desactivarModoAdmin() {
-      document.getElementById("adminPanel").style.display = "none";
-      const controles = document.querySelectorAll(".admin-controls-card");
-      controles.forEach(c => c.style.display = "none");
-    }
-
-    function agregarProducto() {
+    // Agregar nuevo producto a Firestore
+    function agregarProductoFirestore() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
+      const imagen = document.getElementById("nuevaImagen").value.trim() || "icono.jpg";
       const tipo = document.getElementById("nuevoTipo").value;
 
       if (!nombre || !precio) {
@@ -703,43 +618,63 @@
         return;
       }
 
-      const grid = document.getElementById("grid");
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.dataset.tipo = tipo;
-
-      card.innerHTML = `
-        <div class="product-img"><img src="icono.jpg" alt="${nombre}"></div>
-        <h3>${nombre}</h3>
-        <div class="price">${precio}</div>
-        <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
-        <div class="admin-controls-card" style="display: flex;">
-          <button class="btn-edit" onclick="editarProducto(this)">Editar</button>
-          <button class="btn-delete" onclick="eliminarProducto(this)">Eliminar</button>
-        </div>
-      `;
-
-      grid.appendChild(card);
-      document.getElementById("nuevoNombre").value = "";
-      document.getElementById("nuevoPrecio").value = "";
+      db.collection("productos").add({
+        nombre: nombre,
+        precio: precio,
+        imagen: imagen,
+        tipo: tipo,
+        disponible: true
+      }).then(() => {
+        document.getElementById("nuevoNombre").value = "";
+        document.getElementById("nuevoPrecio").value = "";
+        document.getElementById("nuevaImagen").value = "";
+        alert("¡Producto agregado con éxito!");
+      }).catch(err => alert("Error al guardar: " + err.message));
     }
 
-    function editarProducto(btn) {
-      const card = btn.closest(".product-card");
-      const h3 = card.querySelector("h3");
-      const price = card.querySelector(".price");
-
-      const nuevoNombre = prompt("Nuevo nombre del producto:", h3.innerText);
-      const nuevoPrecio = prompt("Nuevo precio:", price.innerText);
-
-      if (nuevoNombre !== null && nuevoNombre.trim() !== "") h3.innerText = nuevoNombre;
-      if (nuevoPrecio !== null && nuevoPrecio.trim() !== "") price.innerText = nuevoPrecio;
+    // Cambiar Disponibilidad (Disponible / Agotado)
+    function cambiarEstado(id, nuevoEstado) {
+      db.collection("productos").doc(id).update({
+        disponible: nuevoEstado
+      });
     }
 
-    function eliminarProducto(btn) {
-      if (confirm("¿Estás seguro de eliminar este producto?")) {
-        btn.closest(".product-card").remove();
+    // Editar Producto (Nombre, Precio, Ruta de la Imagen)
+    function editarProductoFirestore(id, nombreActual, precioActual, imagenActual) {
+      const nuevoNombre = prompt("Nuevo nombre:", nombreActual);
+      const nuevoPrecio = prompt("Nuevo precio:", precioActual);
+      const nuevaImagen = prompt("Ruta/URL de la nueva imagen (ej: relojes/reloj2.jpg):", imagenActual);
+
+      if (nuevoNombre && nuevoPrecio) {
+        db.collection("productos").doc(id).update({
+          nombre: nuevoNombre.trim(),
+          precio: nuevoPrecio.trim(),
+          imagen: (nuevaImagen ? nuevaImagen.trim() : "icono.jpg")
+        });
       }
+    }
+
+    // Eliminar Producto
+    function eliminarProductoFirestore(id) {
+      if (confirm("¿Seguro que deseas eliminar este producto?")) {
+        db.collection("productos").doc(id).delete();
+      }
+    }
+
+    // Modal & Auth
+    function mostrarModalLogin() { document.getElementById("loginModal").style.display = "flex"; }
+    function ocultarModalLogin() { document.getElementById("loginModal").style.display = "none"; }
+
+    function loginConFirebase() {
+      const email = document.getElementById("emailAdmin").value;
+      const pass = document.getElementById("passwordAdmin").value;
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => ocultarModalLogin())
+        .catch((error) => alert("Error: " + error.message));
+    }
+
+    function cerrarSesionAdmin() {
+      auth.signOut().then(() => alert("Sesión cerrada."));
     }
 
     function filtrar(tipo) {
@@ -753,9 +688,7 @@
       });
     }
 
-    function pedirPorWhatsApp(element) {
-      const card = element.closest('.product-card');
-      const producto = card.querySelector('h3').innerText;
+    function pedirPorWhatsApp(producto) {
       const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad del producto: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
