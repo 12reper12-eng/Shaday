@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jireh | Relojes, Alhajas & Accesorios</title>
   
-  <link rel="icon" type="image/jpeg" href="Icono.jpg">
+  <!-- Icono de pestaña ajustado a minúscula -->
+  <link rel="icon" type="image/jpeg" href="icono.jpg">
 
-  <!-- Carga de SDKs de Firebase (v9 Compat - Auth y Firestore) -->
+  <!-- Carga de SDKs de Firebase (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -177,7 +178,6 @@
       letter-spacing: 1px;
     }
 
-    /* Panel Administrador */
     .admin-panel {
       display: none;
       background-color: #1a1a1a;
@@ -215,7 +215,6 @@
       cursor: pointer;
     }
 
-    /* Tarjetas de Productos */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -305,7 +304,6 @@
       background-color: #1ebd56;
     }
 
-    /* Controles de Administración */
     .admin-controls-card {
       display: none;
       margin-top: 10px;
@@ -344,7 +342,6 @@
       flex: 1;
     }
 
-    /* Modal Login */
     .modal {
       display: none;
       position: fixed;
@@ -441,10 +438,10 @@
 </head>
 <body>
 
-  <!-- Encabezado -->
+  <!-- Header con logo corregido a icono.jpg -->
   <header>
     <div class="brand-logo">
-      <img src="Icono.jpg" alt="Logo Jireh">
+      <img src="icono.jpg" alt="Logo Jireh">
       <h1>Jireh</h1>
     </div>
 
@@ -482,7 +479,6 @@
   <main class="container">
     <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
-    <!-- Panel Administrador -->
     <div class="admin-panel" id="adminPanel">
       <h3>Panel Administrador - Nuevo Producto</h3>
       <div class="admin-form">
@@ -506,13 +502,11 @@
       </div>
     </div>
 
-    <!-- Contenedor dinámico de Productos -->
     <div class="products-grid" id="grid">
       <p style="text-align: center; grid-column: 1/-1;">Cargando catálogo...</p>
     </div>
   </main>
 
-  <!-- Modal Login Admin -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <button class="btn-close-modal" onclick="ocultarModalLogin()">✕</button>
@@ -548,28 +542,24 @@
 
     let esAdmin = false;
 
-    // Escuchar autenticación
     auth.onAuthStateChanged((user) => {
       esAdmin = !!user;
       document.getElementById("adminPanel").style.display = esAdmin ? "block" : "none";
       cargarProductosFirestore();
     });
 
-    // Función Inteligente para construir la ruta exacta del archivo
+    // Procesamiento en minúscula estricta
     function procesarRutaImagen(nombreInput, tipoProducto) {
-      if (!nombreInput || nombreInput.trim() === "") return "Icono.jpg";
+      if (!nombreInput || nombreInput.trim() === "") return "icono.jpg";
       
-      let img = nombreInput.trim();
+      let img = nombreInput.trim().toLowerCase();
 
-      // Si el usuario pone solo el nombre de la carpeta "relojes" sin archivo
-      if (img === "relojes" || img === "relojes/") return "Icono.jpg";
+      if (img === "relojes" || img === "relojes/") return "icono.jpg";
 
-      // Si falta la extensión (.jpg, .png, etc.), se le asigna .jpg por defecto
       if (!img.includes(".")) {
         img += ".jpg";
       }
 
-      // Si no especificaste carpeta manual (ej: "duo.jpg"), el sistema detecta cuál carpeta le corresponde
       if (!img.includes("/")) {
         if (tipoProducto.startsWith("reloj")) {
           img = "relojes/" + img;
@@ -585,7 +575,6 @@
       return img;
     }
 
-    // Cargar productos desde Firestore
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
         const grid = document.getElementById("grid");
@@ -602,19 +591,19 @@
           const disponible = prod.disponible !== false;
           const tipo = prod.tipo || "general";
           
-          // Obtener ruta con auto-corrección
           const rutaFinal = procesarRutaImagen(prod.imagen, tipo);
 
           const card = document.createElement("div");
           card.className = `product-card ${disponible ? '' : 'agotado'}`;
           card.dataset.tipo = tipo;
 
+          // Error asignado exactamente a "icono.jpg"
           card.innerHTML = `
             <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
               ${disponible ? 'Disponible' : 'Agotado'}
             </span>
             <div class="product-img">
-              <img src="${rutaFinal}" alt="${prod.nombre}" onerror="this.onerror=null; this.src='Icono.jpg';">
+              <img src="${rutaFinal}" alt="${prod.nombre}" onerror="this.onerror=null; this.src='icono.jpg';">
             </div>
             <h3>${prod.nombre}</h3>
             <div class="price">${prod.precio}</div>
@@ -636,11 +625,10 @@
       });
     }
 
-    // Guardar Producto
     function agregarProductoFirestore() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
-      const imagen = document.getElementById("nuevaImagen").value.trim();
+      const imagen = document.getElementById("nuevaImagen").value.trim().toLowerCase();
       const tipo = document.getElementById("nuevoTipo").value;
 
       if (!nombre || !precio) {
@@ -662,14 +650,12 @@
       }).catch(err => alert("Error: " + err.message));
     }
 
-    // Cambiar estado Disponible / Agotado
     function cambiarEstado(id, nuevoEstado) {
       db.collection("productos").doc(id).update({
         disponible: nuevoEstado
       });
     }
 
-    // Editar Producto desde Admin
     function editarProductoFirestore(id, nombreActual, precioActual, imagenActual) {
       const nuevoNombre = prompt("Nombre del producto:", nombreActual);
       const nuevoPrecio = prompt("Precio del producto:", precioActual);
@@ -679,19 +665,17 @@
         db.collection("productos").doc(id).update({
           nombre: nuevoNombre.trim(),
           precio: nuevoPrecio.trim(),
-          imagen: nuevaImagen ? nuevaImagen.trim() : ""
+          imagen: nuevaImagen ? nuevaImagen.trim().toLowerCase() : ""
         });
       }
     }
 
-    // Eliminar Producto
     function eliminarProductoFirestore(id) {
       if (confirm("¿Estás seguro de eliminar este producto?")) {
         db.collection("productos").doc(id).delete();
       }
     }
 
-    // Controles Modal & Auth
     function mostrarModalLogin() { document.getElementById("loginModal").style.display = "flex"; }
     function ocultarModalLogin() { document.getElementById("loginModal").style.display = "none"; }
 
@@ -707,7 +691,6 @@
       auth.signOut().then(() => alert("Sesión de administrador cerrada."));
     }
 
-    // Filtros de navegación
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
       productos.forEach(prod => {
@@ -719,7 +702,6 @@
       });
     }
 
-    // Redirección WhatsApp
     function pedirPorWhatsApp(producto) {
       const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad del producto: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
