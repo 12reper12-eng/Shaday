@@ -237,7 +237,7 @@
       cargarProductosFirestore();
     });
 
-    // CARGAR CATALOGO EN VIVO
+    // CARGAR CATALOGO EN VIVO CON MANEJO DE ERRORES DE PERMISOS
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
         const grid = document.getElementById("grid");
@@ -285,10 +285,11 @@
         });
       }, (error) => {
         console.error("Error al cargar productos:", error);
+        alert("Error de Firebase Firestore: " + error.message + "\nRevisa las Reglas de Firestore en la consola de Firebase.");
       });
     }
 
-    // SUBIR PRODUCTO Y FOTO A IMGBB + FIRESTORE
+    // SUBIR PRODUCTO Y FOTO A IMGBB + FIRESTORE CON CAPTURA EXPLICITA DE ERRORES
     async function agregarProductoDirecto() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
@@ -303,7 +304,7 @@
 
       const btn = document.getElementById("btnGuardar");
       btn.disabled = true;
-      btn.innerText = "Subiendo...";
+      btn.innerText = "Subiendo a ImgBB...";
 
       try {
         const formData = new FormData();
@@ -317,10 +318,11 @@
         const data = await response.json();
 
         if (!data.success) {
-          throw new Error("No se pudo subir la foto a ImgBB.");
+          throw new Error("No se pudo subir la foto a ImgBB. Detalle: " + JSON.stringify(data));
         }
 
         const urlImagen = data.data.url;
+        btn.innerText = "Guardando en Firebase...";
 
         await db.collection("productos").add({
           nombre: nombre,
@@ -337,8 +339,8 @@
         archivoInput.value = "";
 
       } catch (error) {
-        console.error("Error:", error);
-        alert("Error al subir el producto: " + error.message);
+        console.error("Error completo:", error);
+        alert("Error exacto: " + error.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "Guardar Producto";
@@ -346,7 +348,8 @@
     }
 
     function cambiarEstado(id, nuevoEstado) {
-      db.collection("productos").doc(id).update({ disponible: nuevoEstado });
+      db.collection("productos").doc(id).update({ disponible: nuevoEstado })
+        .catch(err => alert("Error al cambiar estado: " + err.message));
     }
 
     function editarProductoFirestore(id, nombreActual, precioActual) {
@@ -357,13 +360,14 @@
         db.collection("productos").doc(id).update({
           nombre: nuevoNombre.trim(),
           precio: nuevoPrecio.trim()
-        });
+        }).catch(err => alert("Error al editar: " + err.message));
       }
     }
 
     function eliminarProductoFirestore(id) {
       if (confirm("¿Seguro que deseas eliminar este producto del catálogo?")) {
-        db.collection("productos").doc(id).delete();
+        db.collection("productos").doc(id).delete()
+          .catch(err => alert("Error al eliminar: " + err.message));
       }
     }
 
