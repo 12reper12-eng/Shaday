@@ -36,7 +36,7 @@
     .dropdown { position: relative; display: inline-block; }
     .dropdown-content {
       display: none; position: absolute; background-color: #1a1a1a; min-width: 240px;
-      box-shadow: 0px 8px 16px rgba(0,0,0,0.4); border-radius: 6px; overflow: hidden; top: 100%; left: 0; z-index: 1001;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.4); border-radius: 6px; overflow: hidden; top: 100%; right: 0; z-index: 1001;
     }
     .dropdown:hover .dropdown-content { display: block; }
     .dropdown-section { border-bottom: 1px solid #2a2a2a; padding: 8px 0; }
@@ -59,8 +59,13 @@
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     .section-title { text-align: center; margin-bottom: 30px; font-size: 28px; color: #111111; text-transform: uppercase; letter-spacing: 1px; }
 
+    /* PANEL OCULTO POR DEFECTO PARA EL CLIENTE */
     .admin-panel {
-      display: none; background-color: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: none !important;
+      background-color: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .admin-panel.activo {
+      display: block !important;
     }
     .admin-panel h3 { color: #d4af37; margin-bottom: 15px; }
     .admin-form { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -69,6 +74,7 @@
     }
     .btn-admin-add { background-color: #d4af37; color: #111; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
 
+    /* PRODUCTOS */
     .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
     .product-card { background-color: #ffffff; border: 1px solid #eeeeee; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
     .product-card.agotado { opacity: 0.7; }
@@ -90,6 +96,7 @@
     .btn-edit { background-color: #e67e22; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1; }
     .btn-delete { background-color: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1; }
 
+    /* MODAL LOGIN */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
     .modal-content { background: #1a1a1a; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     .modal-content h3 { color: #d4af37; margin-bottom: 15px; }
@@ -123,7 +130,7 @@
         <button class="dropdown-btn">Catálogo &#9662;</button>
         <div class="dropdown-content">
           <div class="dropdown-section">
-            <div class="dropdown-section-title">Filtros</div>
+            <div class="dropdown-section-title">Categorías</div>
             <a href="#grid" onclick="filtrar('todos')">Todos los Productos</a>
             <a href="#grid" onclick="filtrar('reloj-cuero')">Relojes de Cuero</a>
             <a href="#grid" onclick="filtrar('reloj-deportivo')">Relojes Deportivos</a>
@@ -151,13 +158,12 @@
   <main class="container">
     <h2 class="section-title" id="catalogo-titulo">Colección Completa</h2>
 
+    <!-- PANEL ADMIN (Oculto por defecto para usuarios normales) -->
     <div class="admin-panel" id="adminPanel">
       <h3>Panel Administrador - Nuevo Producto</h3>
       <div class="admin-form">
         <input type="text" id="nuevoNombre" placeholder="Nombre del Producto">
         <input type="text" id="nuevoPrecio" placeholder="Precio (ej: 25$)">
-        
-        <!-- Selecciona archivo directamente -->
         <input type="file" id="nuevoArchivo" accept="image/*" style="padding: 7px;">
 
         <select id="nuevoTipo">
@@ -218,19 +224,27 @@
 
     let esAdmin = false;
 
+    // DETECTAR SI ES ADMIN REAL
     auth.onAuthStateChanged((user) => {
-      esAdmin = !!user;
-      document.getElementById("adminPanel").style.display = esAdmin ? "block" : "none";
+      const adminPanel = document.getElementById("adminPanel");
+      if (user) {
+        esAdmin = true;
+        adminPanel.classList.add("activo");
+      } else {
+        esAdmin = false;
+        adminPanel.classList.remove("activo");
+      }
       cargarProductosFirestore();
     });
 
+    // CARGAR CATALOGO EN VIVO
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
         const grid = document.getElementById("grid");
         grid.innerHTML = "";
 
         if (snapshot.empty) {
-          grid.innerHTML = "<p style='text-align: center; grid-column: 1/-1;'>No hay productos agregados en el catálogo.</p>";
+          grid.innerHTML = "<p style='text-align: center; grid-column: 1/-1;'>No hay productos agregados en el catálogo aún.</p>";
           return;
         }
 
@@ -239,13 +253,11 @@
           const id = doc.id;
           const disponible = prod.disponible !== false;
           const tipo = prod.tipo || "general";
-          
-          // Si es una URL completa (ImgBB), la usa directo. Si es local, usa icono.jpg de respaldo.
           const rutaFinal = (prod.imagen && prod.imagen.startsWith('http')) ? prod.imagen : 'icono.jpg';
 
           const card = document.createElement("div");
           card.className = `product-card ${disponible ? '' : 'agotado'}`;
-          card.dataset.tipo = tipo;
+          card.setAttribute("data-tipo", tipo);
 
           card.innerHTML = `
             <span class="badge-status ${disponible ? 'badge-disponible' : 'badge-agotado'}">
@@ -271,9 +283,12 @@
 
           grid.appendChild(card);
         });
+      }, (error) => {
+        console.error("Error al cargar productos:", error);
       });
     }
 
+    // SUBIR PRODUCTO Y FOTO A IMGBB + FIRESTORE
     async function agregarProductoDirecto() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
@@ -288,7 +303,7 @@
 
       const btn = document.getElementById("btnGuardar");
       btn.disabled = true;
-      btn.innerText = "Subiendo imagen...";
+      btn.innerText = "Subiendo...";
 
       try {
         const formData = new FormData();
@@ -302,7 +317,7 @@
         const data = await response.json();
 
         if (!data.success) {
-          throw new Error("Error al subir imagen a ImgBB");
+          throw new Error("No se pudo subir la foto a ImgBB.");
         }
 
         const urlImagen = data.data.url;
@@ -315,7 +330,7 @@
           disponible: true
         });
 
-        alert("¡Producto subido con éxito!");
+        alert("¡Producto guardado exitosamente!");
         
         document.getElementById("nuevoNombre").value = "";
         document.getElementById("nuevoPrecio").value = "";
@@ -323,7 +338,7 @@
 
       } catch (error) {
         console.error("Error:", error);
-        alert("Ocurrió un error al guardar el producto.");
+        alert("Error al subir el producto: " + error.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "Guardar Producto";
@@ -335,8 +350,8 @@
     }
 
     function editarProductoFirestore(id, nombreActual, precioActual) {
-      const nuevoNombre = prompt("Nombre del producto:", nombreActual);
-      const nuevoPrecio = prompt("Precio del producto:", precioActual);
+      const nuevoNombre = prompt("Nuevo nombre:", nombreActual);
+      const nuevoPrecio = prompt("Nuevo precio:", precioActual);
 
       if (nuevoNombre && nuevoPrecio) {
         db.collection("productos").doc(id).update({
@@ -347,7 +362,7 @@
     }
 
     function eliminarProductoFirestore(id) {
-      if (confirm("¿Estás seguro de eliminar este producto?")) {
+      if (confirm("¿Seguro que deseas eliminar este producto del catálogo?")) {
         db.collection("productos").doc(id).delete();
       }
     }
@@ -360,17 +375,22 @@
       const pass = document.getElementById("passwordAdmin").value;
       auth.signInWithEmailAndPassword(email, pass)
         .then(() => ocultarModalLogin())
-        .catch((error) => alert("Error al iniciar sesión: " + error.message));
+        .catch((error) => alert("Datos incorrectos: " + error.message));
     }
 
     function cerrarSesionAdmin() {
-      auth.signOut().then(() => alert("Sesión de administrador cerrada."));
+      auth.signOut().then(() => alert("Has cerrado sesión de administrador."));
     }
 
+    // FILTRAR CATEGORÍAS
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
+      const titulo = document.getElementById("catalogo-titulo");
+
+      titulo.innerText = tipo === 'todos' ? 'Colección Completa' : `Categoría: ${tipo.replace('-', ' ').toUpperCase()}`;
+
       productos.forEach(prod => {
-        if (tipo === 'todos' || prod.dataset.tipo === tipo) {
+        if (tipo === 'todos' || prod.getAttribute("data-tipo") === tipo) {
           prod.style.display = 'block';
         } else {
           prod.style.display = 'none';
@@ -379,7 +399,7 @@
     }
 
     function pedirPorWhatsApp(producto) {
-      const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad del producto: ${producto}.`);
+      const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad de: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
 
