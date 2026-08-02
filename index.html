@@ -7,7 +7,7 @@
   
   <link rel="icon" type="image/jpeg" href="icono.jpg">
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (Firestore, versión compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -59,14 +59,12 @@
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     .section-title { text-align: center; margin-bottom: 30px; font-size: 28px; color: #111111; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* PANEL OCULTO POR DEFECTO PARA EL CLIENTE */
+    /* PANEL ADMIN (Oculto por defecto para usuarios normales) */
     .admin-panel {
       display: none !important;
       background-color: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .admin-panel.activo {
-      display: block !important;
-    }
+    .admin-panel.activo { display: block !important; }
     .admin-panel h3 { color: #d4af37; margin-bottom: 15px; }
     .admin-form { display: flex; flex-wrap: wrap; gap: 10px; }
     .admin-form input, .admin-form select {
@@ -218,13 +216,14 @@
       measurementId: "G-PG168MKW26"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const auth = firebase.auth();
     const db = firebase.firestore();
 
     let esAdmin = false;
 
-    // DETECTAR SI ES ADMIN REAL
     auth.onAuthStateChanged((user) => {
       const adminPanel = document.getElementById("adminPanel");
       if (user) {
@@ -237,7 +236,6 @@
       cargarProductosFirestore();
     });
 
-    // CARGAR CATALOGO EN VIVO CON MANEJO DE ERRORES DE PERMISOS
     function cargarProductosFirestore() {
       db.collection("productos").onSnapshot((snapshot) => {
         const grid = document.getElementById("grid");
@@ -285,11 +283,9 @@
         });
       }, (error) => {
         console.error("Error al cargar productos:", error);
-        alert("Error de Firebase Firestore: " + error.message + "\nRevisa las Reglas de Firestore en la consola de Firebase.");
       });
     }
 
-    // SUBIR PRODUCTO Y FOTO A IMGBB + FIRESTORE CON CAPTURA EXPLICITA DE ERRORES
     async function agregarProductoDirecto() {
       const nombre = document.getElementById("nuevoNombre").value.trim();
       const precio = document.getElementById("nuevoPrecio").value.trim();
@@ -318,7 +314,7 @@
         const data = await response.json();
 
         if (!data.success) {
-          throw new Error("No se pudo subir la foto a ImgBB. Detalle: " + JSON.stringify(data));
+          throw new Error("No se pudo subir la foto a ImgBB.");
         }
 
         const urlImagen = data.data.url;
@@ -339,8 +335,8 @@
         archivoInput.value = "";
 
       } catch (error) {
-        console.error("Error completo:", error);
-        alert("Error exacto: " + error.message);
+        console.error("Error:", error);
+        alert("Error al subir el producto: " + error.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "Guardar Producto";
@@ -348,8 +344,7 @@
     }
 
     function cambiarEstado(id, nuevoEstado) {
-      db.collection("productos").doc(id).update({ disponible: nuevoEstado })
-        .catch(err => alert("Error al cambiar estado: " + err.message));
+      db.collection("productos").doc(id).update({ disponible: nuevoEstado });
     }
 
     function editarProductoFirestore(id, nombreActual, precioActual) {
@@ -360,14 +355,13 @@
         db.collection("productos").doc(id).update({
           nombre: nuevoNombre.trim(),
           precio: nuevoPrecio.trim()
-        }).catch(err => alert("Error al editar: " + err.message));
+        });
       }
     }
 
     function eliminarProductoFirestore(id) {
       if (confirm("¿Seguro que deseas eliminar este producto del catálogo?")) {
-        db.collection("productos").doc(id).delete()
-          .catch(err => alert("Error al eliminar: " + err.message));
+        db.collection("productos").doc(id).delete();
       }
     }
 
@@ -386,7 +380,6 @@
       auth.signOut().then(() => alert("Has cerrado sesión de administrador."));
     }
 
-    // FILTRAR CATEGORÍAS
     function filtrar(tipo) {
       const productos = document.querySelectorAll('.product-card');
       const titulo = document.getElementById("catalogo-titulo");
