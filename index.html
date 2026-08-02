@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shaday | Relojes, Alhajas & Accesorios</title>
+  <title>Jireh | Relojes, Alhajas & Accesorios</title>
   
+  <!-- Ícono de la Pestaña (Favicon) -->
+  <link rel="icon" type="image/png" href="icono.png">
+
   <!-- Carga de SDKs de Firebase (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -324,9 +327,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #999999;
       margin-bottom: 12px;
-      font-weight: bold;
+      overflow: hidden;
+    }
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 10px;
     }
     .product-card h3 {
       font-size: 17px;
@@ -414,8 +422,8 @@
   <!-- Encabezado -->
   <header>
     <div class="brand-logo">
-      <img src="https://via.placeholder.com/40/d4af37/ffffff?text=S" alt="Logo Shaday">
-      <h1>Shaday</h1>
+      <img src="icono.png" alt="Logo Jireh">
+      <h1>Jireh</h1>
     </div>
 
     <!-- Navegación -->
@@ -455,7 +463,7 @@
   <!-- Banner Hero -->
   <section class="hero" id="inicio">
     <h2>Estilo y Elegancia</h2>
-    <p>Complementa tu presencia con nuestra colección exclusiva de relojes, joyería, bolsos y bandoleros Shaday.</p>
+    <p>Complementa tu presencia con nuestra colección exclusiva de relojes, joyería, bolsos y bandoleros Jireh.</p>
     <a href="#grid" class="btn-main">Ver Colección</a>
   </section>
 
@@ -490,7 +498,7 @@
     <div class="products-grid" id="grid">
 
       <div class="product-card" data-tipo="reloj-cuero">
-        <div class="product-img">[ Foto Reloj ]</div>
+        <div class="product-img"><img src="icono.png" alt="Reloj Ejecutivo de Cuero"></div>
         <h3>Reloj Ejecutivo de Cuero</h3>
         <div class="price">$25.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -501,7 +509,7 @@
       </div>
 
       <div class="product-card" data-tipo="reloj-deportivo">
-        <div class="product-img">[ Foto Reloj ]</div>
+        <div class="product-img"><img src="icono.png" alt="Reloj Deportivo Resistente"></div>
         <h3>Reloj Deportivo Resistente</h3>
         <div class="price">$30.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -512,7 +520,7 @@
       </div>
 
       <div class="product-card" data-tipo="reloj-hierro">
-        <div class="product-img">[ Foto Reloj ]</div>
+        <div class="product-img"><img src="icono.png" alt="Reloj Elegante Correa de Hierro"></div>
         <h3>Reloj Elegante Correa de Hierro</h3>
         <div class="price">$35.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -523,7 +531,7 @@
       </div>
 
       <div class="product-card" data-tipo="correa-cuero">
-        <div class="product-img">[ Foto Correa ]</div>
+        <div class="product-img"><img src="icono.png" alt="Correa de Repuesto en Cuero"></div>
         <h3>Correa de Repuesto en Cuero</h3>
         <div class="price">$10.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -534,7 +542,7 @@
       </div>
 
       <div class="product-card" data-tipo="correa-metal">
-        <div class="product-img">[ Foto Correa ]</div>
+        <div class="product-img"><img src="icono.png" alt="Correa Metálica Ajustable"></div>
         <h3>Correa Metálica Ajustable</h3>
         <div class="price">$12.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -545,7 +553,7 @@
       </div>
 
       <div class="product-card" data-tipo="cadena">
-        <div class="product-img">[ Foto Cadena ]</div>
+        <div class="product-img"><img src="icono.png" alt="Cadena Fina Bañada en Oro"></div>
         <h3>Cadena Fina Bañada en Oro</h3>
         <div class="price">$18.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -556,7 +564,7 @@
       </div>
 
       <div class="product-card" data-tipo="pulsera">
-        <div class="product-img">[ Foto Pulsera ]</div>
+        <div class="product-img"><img src="icono.png" alt="Pulsera de Acero Inoxidable"></div>
         <h3>Pulsera de Acero Inoxidable</h3>
         <div class="price">$12.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -567,7 +575,7 @@
       </div>
 
       <div class="product-card" data-tipo="tobillera">
-        <div class="product-img">[ Foto Tobillera ]</div>
+        <div class="product-img"><img src="icono.png" alt="Tobillera Playera Ajustable"></div>
         <h3>Tobillera Playera Ajustable</h3>
         <div class="price">$8.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -578,7 +586,7 @@
       </div>
 
       <div class="product-card" data-tipo="bandolero">
-        <div class="product-img">[ Foto Bandolero ]</div>
+        <div class="product-img"><img src="icono.png" alt="Bandolero Urbano Unisex"></div>
         <h3>Bandolero Urbano Unisex</h3>
         <div class="price">$22.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -589,7 +597,7 @@
       </div>
 
       <div class="product-card" data-tipo="bolso">
-        <div class="product-img">[ Foto Bolso ]</div>
+        <div class="product-img"><img src="icono.png" alt="Bolso de Mano Casual"></div>
         <h3>Bolso de Mano Casual</h3>
         <div class="price">$30.00</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -615,7 +623,7 @@
 
   <!-- Pie de Página -->
   <footer>
-    <p>&copy; 2026 <strong>Shaday</strong> - Todos los derechos reservados.</p>
+    <p>&copy; 2026 <strong>Jireh</strong> - Todos los derechos reservados.</p>
     <p>Escríbenos a nuestro <a href="#" class="footer-whatsapp" onclick="abrirContactoWhatsApp(); return false;">WhatsApp Oficial</a> para atención directa.</p>
     <!-- Botón discreto para abrir la administración -->
     <span class="admin-link" onclick="mostrarModalLogin()">Acceso Admin</span>
@@ -710,7 +718,7 @@
       card.dataset.tipo = tipo;
 
       card.innerHTML = `
-        <div class="product-img">[ Foto Producto ]</div>
+        <div class="product-img"><img src="icono.png" alt="${nombre}"></div>
         <h3>${nombre}</h3>
         <div class="price">${precio}</div>
         <button class="btn-buy" onclick="pedirPorWhatsApp(this)">Pedir por WhatsApp</button>
@@ -757,12 +765,12 @@
     function pedirPorWhatsApp(element) {
       const card = element.closest('.product-card');
       const producto = card.querySelector('h3').innerText;
-      const mensaje = encodeURIComponent(`¡Hola Shaday! Me interesa consultar la disponibilidad del producto: ${producto}.`);
+      const mensaje = encodeURIComponent(`¡Hola Jireh! Me interesa consultar la disponibilidad del producto: ${producto}.`);
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
 
     function abrirContactoWhatsApp() {
-      const mensaje = encodeURIComponent("¡Hola Shaday! Quisiera recibir información sobre sus productos y envíos.");
+      const mensaje = encodeURIComponent("¡Hola Jireh! Quisiera recibir información sobre sus productos y envíos.");
       window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, '_blank');
     }
   </script>
